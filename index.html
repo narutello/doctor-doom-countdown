@@ -3,149 +3,565 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Doctor Doom Countdown</title>
+
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --doom-green: #2f8f46;
+            --doom-green-bright: #4fd16b;
+            --doom-green-dark: #12391d;
+            --metal: #b7bbb8;
+            --metal-dark: #4d514f;
+            --black: #050605;
+        }
+
         body {
             height: 100vh;
-            background: #0a0a0a;
+            overflow: hidden;
+
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-family: 'Arial Black', 'Impact', sans-serif;
-            overflow: hidden;
-            gap: 40px;
+
+            gap: 42px;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(35, 90, 45, 0.14) 0%,
+                    rgba(5, 6, 5, 0.8) 35%,
+                    #020302 80%
+                );
+
+            background-color: var(--black);
+
+            color: white;
+
+            font-family: 'Orbitron', 'Arial Black', sans-serif;
+
+            position: relative;
         }
 
+        /* Cinematic vignette */
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+
+            background:
+                radial-gradient(
+                    ellipse at center,
+                    transparent 35%,
+                    rgba(0, 0, 0, 0.55) 75%,
+                    rgba(0, 0, 0, 0.95) 100%
+                );
+
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Doom green atmosphere */
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 700px;
+            height: 700px;
+
+            background: rgba(47, 143, 70, 0.08);
+
+            filter: blur(130px);
+            border-radius: 50%;
+
+            pointer-events: none;
+        }
+
+        /* Background Doom emblem */
+
+        .doom-symbol {
+            position: absolute;
+
+            width: 420px;
+            height: 520px;
+
+            border: 2px solid rgba(79, 209, 107, 0.035);
+
+            clip-path: polygon(
+                50% 0%,
+                88% 15%,
+                100% 45%,
+                82% 88%,
+                50% 100%,
+                18% 88%,
+                0% 45%,
+                12% 15%
+            );
+
+            opacity: 0.8;
+
+            box-shadow:
+                inset 0 0 80px rgba(47, 143, 70, 0.04),
+                0 0 80px rgba(47, 143, 70, 0.03);
+
+            pointer-events: none;
+        }
+
+        /* Small decorative lines */
+
+        .doom-symbol::before,
+        .doom-symbol::after {
+            content: "";
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            background: rgba(79, 209, 107, 0.035);
+        }
+
+        .doom-symbol::before {
+            width: 250px;
+            height: 2px;
+        }
+
+        .doom-symbol::after {
+            width: 2px;
+            height: 330px;
+        }
+
+        /* Top label */
+
         .title {
+            position: relative;
+            z-index: 2;
+
             font-size: 28px;
-            color: #39ff14;
-            text-shadow: 
-                0 0 10px #39ff14,
-                0 0 20px #39ff14,
-                0 0 40px #1a7a0a;
-            letter-spacing: 6px;
+            font-weight: 800;
+
+            letter-spacing: 8px;
             text-transform: uppercase;
             text-align: center;
+
+            color: #d7dad8;
+
+            text-shadow:
+                0 0 8px rgba(79, 209, 107, 0.35),
+                0 0 25px rgba(47, 143, 70, 0.25);
+
+            animation: titlePulse 4s ease-in-out infinite;
+        }
+
+        .title span {
+            color: var(--doom-green-bright);
+
+            text-shadow:
+                0 0 8px rgba(79, 209, 107, 0.8),
+                0 0 25px rgba(47, 143, 70, 0.7);
         }
 
         .subtitle {
-            font-size: 16px;
-            color: #a0a0a0;
-            letter-spacing: 3px;
+            position: relative;
+            z-index: 2;
+
+            margin-top: -25px;
+
+            font-size: 12px;
+            font-weight: 500;
+
+            color: #777d79;
+
+            letter-spacing: 5px;
             text-transform: uppercase;
-            margin-top: -20px;
+
+            border-top: 1px solid rgba(79, 209, 107, 0.25);
+            border-bottom: 1px solid rgba(79, 209, 107, 0.25);
+
+            padding: 8px 22px;
         }
 
+        /* Countdown */
+
         .timer {
+            position: relative;
+            z-index: 2;
+
             display: flex;
-            gap: 30px;
+            gap: 22px;
+
             text-align: center;
         }
 
+        /* Individual boxes */
+
         .time-box {
-            min-width: 110px;
+            position: relative;
+
+            min-width: 125px;
+            padding: 20px 14px 16px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(100, 105, 102, 0.10),
+                    rgba(10, 13, 11, 0.85)
+                );
+
+            border: 1px solid rgba(155, 160, 157, 0.18);
+
+            clip-path: polygon(
+                8px 0,
+                calc(100% - 8px) 0,
+                100% 8px,
+                100% calc(100% - 8px),
+                calc(100% - 8px) 100%,
+                8px 100%,
+                0 calc(100% - 8px),
+                0 8px
+            );
+
+            box-shadow:
+                inset 0 0 25px rgba(255, 255, 255, 0.025),
+                0 0 30px rgba(0, 0, 0, 0.7);
+
+            transition:
+                transform 0.3s ease,
+                border-color 0.3s ease;
         }
+
+        .time-box:hover {
+            transform: translateY(-5px);
+
+            border-color: rgba(79, 209, 107, 0.45);
+
+            box-shadow:
+                inset 0 0 30px rgba(47, 143, 70, 0.08),
+                0 0 30px rgba(47, 143, 70, 0.12);
+        }
+
+        /* Green corner */
+
+        .time-box::before {
+            content: "";
+
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            width: 32px;
+            height: 2px;
+
+            background: var(--doom-green-bright);
+
+            box-shadow:
+                0 0 8px rgba(79, 209, 107, 0.7);
+        }
+
+        .time-box::after {
+            content: "";
+
+            position: absolute;
+            bottom: 0;
+            right: 0;
+
+            width: 32px;
+            height: 2px;
+
+            background: var(--doom-green);
+
+            box-shadow:
+                0 0 8px rgba(47, 143, 70, 0.5);
+        }
+
+        /* Numbers */
 
         .number {
-            font-size: 80px;
-            font-weight: 900;
-            color: #39ff14;
-            text-shadow: 
-                0 0 10px #39ff14,
-                0 0 20px #39ff14,
-                0 0 40px #1a7a0a,
-                0 0 80px #0d4005;
-            letter-spacing: 2px;
+            font-size: 70px;
+            font-weight: 800;
+
             line-height: 1;
+
+            color: #d8dcda;
+
+            letter-spacing: 2px;
+
+            text-shadow:
+                0 0 2px #fff,
+                0 0 10px rgba(79, 209, 107, 0.35),
+                0 0 30px rgba(47, 143, 70, 0.25);
+
+            font-variant-numeric: tabular-nums;
+
+            transition: color 0.2s ease;
         }
+
+        /* Labels */
 
         .label {
-            font-size: 16px;
-            color: #c0c0c0;
-            margin-top: 12px;
-            letter-spacing: 3px;
+            margin-top: 14px;
+
+            font-size: 10px;
+            font-weight: 600;
+
+            color: #747a76;
+
+            letter-spacing: 4px;
+
             text-transform: uppercase;
-            text-shadow: 0 0 8px #888;
         }
 
-        @media (max-width: 600px) {
+        /* Bottom warning */
+
+        .warning {
+            position: absolute;
+            bottom: 28px;
+
+            z-index: 2;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 9px;
+
+            color: #4f5652;
+
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+        }
+
+        .warning::before,
+        .warning::after {
+            content: "";
+
+            width: 35px;
+            height: 1px;
+
+            background: #303632;
+        }
+
+        .warning-dot {
+            width: 5px;
+            height: 5px;
+
+            border-radius: 50%;
+
+            background: var(--doom-green-bright);
+
+            box-shadow:
+                0 0 8px var(--doom-green-bright);
+
+            animation: blink 1.5s infinite;
+        }
+
+        /* Animations */
+
+        @keyframes titlePulse {
+            0%,
+            100% {
+                opacity: 0.85;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+
+            body {
+                gap: 30px;
+            }
+
             .title {
                 font-size: 18px;
+                letter-spacing: 4px;
+            }
+
+            .subtitle {
+                font-size: 9px;
                 letter-spacing: 3px;
             }
+
             .timer {
-                gap: 15px;
+                gap: 8px;
             }
-            .number {
-                font-size: 48px;
-            }
+
             .time-box {
-                min-width: 70px;
+                min-width: 74px;
+                padding: 14px 7px 12px;
             }
+
+            .number {
+                font-size: 38px;
+            }
+
             .label {
-                font-size: 12px;
+                font-size: 8px;
+                letter-spacing: 2px;
+                margin-top: 10px;
+            }
+
+            .doom-symbol {
+                width: 280px;
+                height: 360px;
+            }
+
+            .warning {
+                font-size: 7px;
+                letter-spacing: 2px;
+            }
+        }
+
+        @media (max-width: 400px) {
+
+            .timer {
+                gap: 5px;
+            }
+
+            .time-box {
+                min-width: 68px;
+                padding: 12px 4px;
+            }
+
+            .number {
+                font-size: 32px;
+            }
+
+            .label {
+                font-size: 7px;
             }
         }
     </style>
 </head>
+
 <body>
-    <div class="title">Doctor Doom is Coming</div>
-    <div class="subtitle">December 18, 2026</div>
+
+    <div class="doom-symbol"></div>
+
+    <div class="title">
+        <span>DOOM</span> IS COMING
+    </div>
+
+    <div class="subtitle">
+        December 18, 2026
+    </div>
 
     <div class="timer">
+
         <div class="time-box">
             <div class="number" id="days">00</div>
             <div class="label">Days</div>
         </div>
+
         <div class="time-box">
             <div class="number" id="hours">00</div>
             <div class="label">Hours</div>
         </div>
+
         <div class="time-box">
             <div class="number" id="minutes">00</div>
             <div class="label">Minutes</div>
         </div>
+
         <div class="time-box">
             <div class="number" id="seconds">00</div>
             <div class="label">Seconds</div>
         </div>
+
+    </div>
+
+    <div class="warning">
+        <div class="warning-dot"></div>
+        Latveria Protocol Activated
     </div>
 
     <script>
-        const targetDate = new Date("2026-12-18T00:00:00").getTime();
+        const targetDate =
+            new Date("2026-12-18T00:00:00").getTime();
 
         function updateCountdown() {
+
             const now = new Date().getTime();
+
             const distance = targetDate - now;
 
             if (distance < 0) {
+
                 document.getElementById("days").textContent = "00";
                 document.getElementById("hours").textContent = "00";
                 document.getElementById("minutes").textContent = "00";
                 document.getElementById("seconds").textContent = "00";
+
                 return;
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const days =
+                Math.floor(
+                    distance / (1000 * 60 * 60 * 24)
+                );
 
-            document.getElementById("days").textContent = String(days).padStart(2, "0");
-            document.getElementById("hours").textContent = String(hours).padStart(2, "0");
-            document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
-            document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+            const hours =
+                Math.floor(
+                    (distance % (1000 * 60 * 60 * 24))
+                    / (1000 * 60 * 60)
+                );
+
+            const minutes =
+                Math.floor(
+                    (distance % (1000 * 60 * 60))
+                    / (1000 * 60)
+                );
+
+            const seconds =
+                Math.floor(
+                    (distance % (1000 * 60))
+                    / 1000
+                );
+
+            document.getElementById("days").textContent =
+                String(days).padStart(2, "0");
+
+            document.getElementById("hours").textContent =
+                String(hours).padStart(2, "0");
+
+            document.getElementById("minutes").textContent =
+                String(minutes).padStart(2, "0");
+
+            document.getElementById("seconds").textContent =
+                String(seconds).padStart(2, "0");
         }
 
         updateCountdown();
+
         setInterval(updateCountdown, 1000);
     </script>
+
 </body>
 </html>
