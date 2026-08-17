@@ -12,7 +12,7 @@ Just Doom.
 
 ⚡ Preview
 
-🔗 "LIVE PREVIEW — ENTER LATVERIA" (YOUR_PREVIEW_LINK_HERE)
+🔗 **[LIVE PREVIEW — ENTER LATVERIA](https://doctor-doom-countdown.vercel.app/)**
 
 ---
 
