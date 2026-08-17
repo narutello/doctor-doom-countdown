@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شمارش معکوس</title>
+    <title>Doctor Doom Countdown</title>
     <style>
         * {
             margin: 0;
@@ -15,10 +15,32 @@
             height: 100vh;
             background: #0a0a0a;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             font-family: 'Arial Black', 'Impact', sans-serif;
             overflow: hidden;
+            gap: 40px;
+        }
+
+        .title {
+            font-size: 28px;
+            color: #39ff14;
+            text-shadow: 
+                0 0 10px #39ff14,
+                0 0 20px #39ff14,
+                0 0 40px #1a7a0a;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #a0a0a0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: -20px;
         }
 
         .timer {
@@ -34,26 +56,30 @@
         .number {
             font-size: 80px;
             font-weight: 900;
-            color: #e62429;
+            color: #39ff14;
             text-shadow: 
-                0 0 10px #e62429,
-                0 0 20px #e62429,
-                0 0 40px #9b0000,
-                0 0 80px #5c0000;
+                0 0 10px #39ff14,
+                0 0 20px #39ff14,
+                0 0 40px #1a7a0a,
+                0 0 80px #0d4005;
             letter-spacing: 2px;
             line-height: 1;
         }
 
         .label {
             font-size: 16px;
-            color: #c6a700;
+            color: #c0c0c0;
             margin-top: 12px;
             letter-spacing: 3px;
             text-transform: uppercase;
-            text-shadow: 0 0 8px #c6a700;
+            text-shadow: 0 0 8px #888;
         }
 
         @media (max-width: 600px) {
+            .title {
+                font-size: 18px;
+                letter-spacing: 3px;
+            }
             .timer {
                 gap: 15px;
             }
@@ -70,22 +96,25 @@
     </style>
 </head>
 <body>
+    <div class="title">Doctor Doom is Coming</div>
+    <div class="subtitle">December 18, 2026</div>
+
     <div class="timer">
         <div class="time-box">
             <div class="number" id="days">00</div>
-            <div class="label">روز</div>
+            <div class="label">Days</div>
         </div>
         <div class="time-box">
             <div class="number" id="hours">00</div>
-            <div class="label">ساعت</div>
+            <div class="label">Hours</div>
         </div>
         <div class="time-box">
             <div class="number" id="minutes">00</div>
-            <div class="label">دقیقه</div>
+            <div class="label">Minutes</div>
         </div>
         <div class="time-box">
             <div class="number" id="seconds">00</div>
-            <div class="label">ثانیه</div>
+            <div class="label">Seconds</div>
         </div>
     </div>
 
