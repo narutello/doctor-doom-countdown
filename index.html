@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Doctor Doom Countdown</title>
+    <title>DOOM — Latveria Protocol</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
@@ -16,225 +16,389 @@
         }
 
         :root {
-            --doom-green: #2f8f46;
-            --doom-green-bright: #4fd16b;
-            --doom-green-dark: #12391d;
-            --metal: #b7bbb8;
-            --metal-dark: #4d514f;
-            --black: #050605;
+            --green: #3cff72;
+            --green-dark: #0c5223;
+            --green-glow: #1bb94e;
+
+            --metal: #c8cfcb;
+            --metal-dark: #454b48;
+
+            --black: #030504;
         }
 
         body {
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
 
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
 
-            gap: 42px;
-
             background:
                 radial-gradient(
-                    circle at center,
-                    rgba(35, 90, 45, 0.14) 0%,
-                    rgba(5, 6, 5, 0.8) 35%,
-                    #020302 80%
+                    circle at 50% 45%,
+                    #102418 0%,
+                    #07100a 35%,
+                    #030504 72%,
+                    #010201 100%
                 );
-
-            background-color: var(--black);
 
             color: white;
 
-            font-family: 'Orbitron', 'Arial Black', sans-serif;
+            font-family:
+                'Orbitron',
+                'Arial Black',
+                sans-serif;
 
             position: relative;
         }
 
-        /* Cinematic vignette */
+        /* =========================================
+           LATVERIA ATMOSPHERE
+        ========================================= */
 
-        body::before {
-            content: "";
+        .atmosphere {
             position: fixed;
-            inset: 0;
 
-            background:
-                radial-gradient(
-                    ellipse at center,
-                    transparent 35%,
-                    rgba(0, 0, 0, 0.55) 75%,
-                    rgba(0, 0, 0, 0.95) 100%
-                );
+            width: 750px;
+            height: 750px;
 
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        /* Doom green atmosphere */
-
-        body::after {
-            content: "";
-            position: fixed;
-            width: 700px;
-            height: 700px;
-
-            background: rgba(47, 143, 70, 0.08);
-
-            filter: blur(130px);
-            border-radius: 50%;
-
-            pointer-events: none;
-        }
-
-        /* Background Doom emblem */
-
-        .doom-symbol {
-            position: absolute;
-
-            width: 420px;
-            height: 520px;
-
-            border: 2px solid rgba(79, 209, 107, 0.035);
-
-            clip-path: polygon(
-                50% 0%,
-                88% 15%,
-                100% 45%,
-                82% 88%,
-                50% 100%,
-                18% 88%,
-                0% 45%,
-                12% 15%
-            );
-
-            opacity: 0.8;
-
-            box-shadow:
-                inset 0 0 80px rgba(47, 143, 70, 0.04),
-                0 0 80px rgba(47, 143, 70, 0.03);
-
-            pointer-events: none;
-        }
-
-        /* Small decorative lines */
-
-        .doom-symbol::before,
-        .doom-symbol::after {
-            content: "";
-
-            position: absolute;
-            top: 50%;
             left: 50%;
+            top: 50%;
 
             transform: translate(-50%, -50%);
 
-            background: rgba(79, 209, 107, 0.035);
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(60, 255, 114, 0.09),
+                    transparent 65%
+                );
+
+            filter: blur(60px);
+
+            pointer-events: none;
         }
 
-        .doom-symbol::before {
-            width: 250px;
+        /* =========================================
+           DOOM EMBLEM
+        ========================================= */
+
+        .emblem {
+            position: absolute;
+
+            width: 470px;
+            height: 570px;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            opacity: 0.08;
+
+            border: 2px solid var(--green);
+
+            clip-path: polygon(
+                50% 0%,
+                86% 12%,
+                100% 42%,
+                91% 75%,
+                67% 94%,
+                50% 100%,
+                33% 94%,
+                9% 75%,
+                0% 42%,
+                14% 12%
+            );
+
+            box-shadow:
+                inset 0 0 80px rgba(60, 255, 114, 0.15),
+                0 0 80px rgba(60, 255, 114, 0.08);
+
+            pointer-events: none;
+        }
+
+        .emblem::before {
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 230px;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            border: 2px solid var(--green);
+
+            clip-path: polygon(
+                50% 0%,
+                90% 20%,
+                100% 70%,
+                50% 100%,
+                0% 70%,
+                10% 20%
+            );
+        }
+
+        .emblem::after {
+            content: "";
+
+            position: absolute;
+
+            width: 70px;
+            height: 70px;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            border: 2px solid var(--green);
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 30px rgba(60, 255, 114, 0.2);
+        }
+
+        /* =========================================
+           HUD FRAME
+        ========================================= */
+
+        .hud {
+            position: fixed;
+
+            inset: 35px;
+
+            border:
+                1px solid rgba(60, 255, 114, 0.07);
+
+            pointer-events: none;
+        }
+
+        .hud::before,
+        .hud::after {
+            content: "";
+
+            position: absolute;
+
+            width: 70px;
             height: 2px;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 10px var(--green);
         }
 
-        .doom-symbol::after {
-            width: 2px;
-            height: 330px;
+        .hud::before {
+            top: -1px;
+            left: -1px;
         }
 
-        /* Top label */
+        .hud::after {
+            bottom: -1px;
+            right: -1px;
+        }
+
+        /* =========================================
+           CONTENT
+        ========================================= */
+
+        .content {
+            position: relative;
+
+            z-index: 5;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+
+            text-align: center;
+        }
+
+        .status {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+
+            font-size: 9px;
+
+            font-weight: 600;
+
+            letter-spacing: 5px;
+
+            color: #68736c;
+
+            text-transform: uppercase;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 10px var(--green);
+
+            animation: pulse 1.5s infinite;
+        }
+
+        /* =========================================
+           TITLE
+        ========================================= */
 
         .title {
-            position: relative;
-            z-index: 2;
+            font-size: clamp(38px, 7vw, 82px);
 
-            font-size: 28px;
-            font-weight: 800;
+            font-weight: 900;
 
             letter-spacing: 8px;
-            text-transform: uppercase;
-            text-align: center;
 
-            color: #d7dad8;
+            color: var(--metal);
+
+            text-transform: uppercase;
 
             text-shadow:
-                0 0 8px rgba(79, 209, 107, 0.35),
-                0 0 25px rgba(47, 143, 70, 0.25);
+                0 1px 0 #ffffff,
+                0 2px 0 #7b817e,
+                0 4px 0 #353a38,
+                0 0 18px rgba(60, 255, 114, 0.22);
 
-            animation: titlePulse 4s ease-in-out infinite;
+            animation: titleBreath 5s ease-in-out infinite;
         }
 
         .title span {
-            color: var(--doom-green-bright);
+            color: var(--green);
 
             text-shadow:
-                0 0 8px rgba(79, 209, 107, 0.8),
-                0 0 25px rgba(47, 143, 70, 0.7);
+                0 0 8px rgba(60, 255, 114, 0.8),
+                0 0 25px rgba(60, 255, 114, 0.4);
         }
 
         .subtitle {
-            position: relative;
-            z-index: 2;
+            margin-top: 15px;
 
-            margin-top: -25px;
+            font-size: 10px;
 
-            font-size: 12px;
             font-weight: 500;
 
-            color: #777d79;
+            letter-spacing: 6px;
 
-            letter-spacing: 5px;
+            color: #707a74;
+
             text-transform: uppercase;
-
-            border-top: 1px solid rgba(79, 209, 107, 0.25);
-            border-bottom: 1px solid rgba(79, 209, 107, 0.25);
-
-            padding: 8px 22px;
         }
 
-        /* Countdown */
+        /* =========================================
+           DIVIDER
+        ========================================= */
+
+        .divider {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            margin: 28px 0 0;
+
+            width: 430px;
+
+            max-width: 80vw;
+        }
+
+        .divider span {
+            height: 1px;
+
+            flex: 1;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(60, 255, 114, 0.4)
+                );
+        }
+
+        .divider span:last-child {
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(60, 255, 114, 0.4),
+                    transparent
+                );
+        }
+
+        .divider i {
+            width: 7px;
+            height: 7px;
+
+            border: 1px solid var(--green);
+
+            transform: rotate(45deg);
+
+            box-shadow:
+                0 0 10px rgba(60, 255, 114, 0.5);
+        }
+
+        /* =========================================
+           TIMER
+        ========================================= */
 
         .timer {
-            position: relative;
-            z-index: 2;
-
             display: flex;
-            gap: 22px;
 
-            text-align: center;
+            gap: 18px;
+
+            margin-top: 30px;
         }
-
-        /* Individual boxes */
 
         .time-box {
             position: relative;
 
             min-width: 125px;
-            padding: 20px 14px 16px;
+
+            padding: 22px 15px 17px;
 
             background:
                 linear-gradient(
                     145deg,
-                    rgba(100, 105, 102, 0.10),
-                    rgba(10, 13, 11, 0.85)
+                    rgba(100, 110, 105, 0.12),
+                    rgba(3, 5, 4, 0.92)
                 );
 
-            border: 1px solid rgba(155, 160, 157, 0.18);
+            border:
+                1px solid rgba(150, 160, 155, 0.22);
 
             clip-path: polygon(
-                8px 0,
-                calc(100% - 8px) 0,
-                100% 8px,
-                100% calc(100% - 8px),
-                calc(100% - 8px) 100%,
-                8px 100%,
-                0 calc(100% - 8px),
-                0 8px
+                9px 0,
+                calc(100% - 9px) 0,
+                100% 9px,
+                100% calc(100% - 9px),
+                calc(100% - 9px) 100%,
+                9px 100%,
+                0 calc(100% - 9px),
+                0 9px
             );
 
             box-shadow:
-                inset 0 0 25px rgba(255, 255, 255, 0.025),
-                0 0 30px rgba(0, 0, 0, 0.7);
+                inset 0 0 30px rgba(255, 255, 255, 0.025),
+                0 15px 45px rgba(0, 0, 0, 0.5);
 
             transition:
                 transform 0.3s ease,
@@ -242,145 +406,148 @@
         }
 
         .time-box:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
 
-            border-color: rgba(79, 209, 107, 0.45);
+            border-color:
+                rgba(60, 255, 114, 0.55);
 
             box-shadow:
-                inset 0 0 30px rgba(47, 143, 70, 0.08),
-                0 0 30px rgba(47, 143, 70, 0.12);
+                inset 0 0 30px rgba(60, 255, 114, 0.06),
+                0 15px 45px rgba(0, 0, 0, 0.6),
+                0 0 25px rgba(60, 255, 114, 0.1);
         }
 
-        /* Green corner */
+        /* Armor details */
 
         .time-box::before {
             content: "";
 
             position: absolute;
+
             top: 0;
             left: 0;
 
-            width: 32px;
+            width: 38px;
             height: 2px;
 
-            background: var(--doom-green-bright);
+            background: var(--green);
 
             box-shadow:
-                0 0 8px rgba(79, 209, 107, 0.7);
+                0 0 9px var(--green);
         }
 
         .time-box::after {
             content: "";
 
             position: absolute;
-            bottom: 0;
-            right: 0;
 
-            width: 32px;
+            right: 0;
+            bottom: 0;
+
+            width: 38px;
             height: 2px;
 
-            background: var(--doom-green);
-
-            box-shadow:
-                0 0 8px rgba(47, 143, 70, 0.5);
+            background: var(--green-dark);
         }
 
         /* Numbers */
 
         .number {
-            font-size: 70px;
+            font-size: 65px;
+
             font-weight: 800;
 
             line-height: 1;
 
-            color: #d8dcda;
-
-            letter-spacing: 2px;
-
-            text-shadow:
-                0 0 2px #fff,
-                0 0 10px rgba(79, 209, 107, 0.35),
-                0 0 30px rgba(47, 143, 70, 0.25);
+            color: #dce1de;
 
             font-variant-numeric: tabular-nums;
 
-            transition: color 0.2s ease;
+            text-shadow:
+                0 1px 0 #ffffff,
+                0 0 12px rgba(60, 255, 114, 0.25),
+                0 0 30px rgba(60, 255, 114, 0.12);
         }
-
-        /* Labels */
 
         .label {
-            margin-top: 14px;
-
-            font-size: 10px;
-            font-weight: 600;
-
-            color: #747a76;
-
-            letter-spacing: 4px;
-
-            text-transform: uppercase;
-        }
-
-        /* Bottom warning */
-
-        .warning {
-            position: absolute;
-            bottom: 28px;
-
-            z-index: 2;
-
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-top: 13px;
 
             font-size: 9px;
 
-            color: #4f5652;
+            font-weight: 600;
 
-            letter-spacing: 3px;
+            letter-spacing: 4px;
+
+            color: #67716b;
 
             text-transform: uppercase;
         }
 
-        .warning::before,
-        .warning::after {
+        /* =========================================
+           SYSTEM STATUS
+        ========================================= */
+
+        .system {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-top: 30px;
+
+            font-size: 8px;
+
+            font-weight: 500;
+
+            letter-spacing: 3px;
+
+            color: #414b45;
+
+            text-transform: uppercase;
+        }
+
+        .system::before,
+        .system::after {
             content: "";
 
             width: 35px;
             height: 1px;
 
-            background: #303632;
+            background: #29322d;
         }
 
-        .warning-dot {
-            width: 5px;
-            height: 5px;
-
-            border-radius: 50%;
-
-            background: var(--doom-green-bright);
-
-            box-shadow:
-                0 0 8px var(--doom-green-bright);
-
-            animation: blink 1.5s infinite;
+        .system strong {
+            color: #617069;
         }
 
-        /* Animations */
+        /* =========================================
+           SCANLINES
+        ========================================= */
 
-        @keyframes titlePulse {
-            0%,
-            100% {
-                opacity: 0.85;
-            }
+        .scanlines {
+            position: fixed;
 
-            50% {
-                opacity: 1;
-            }
+            inset: 0;
+
+            z-index: 15;
+
+            pointer-events: none;
+
+            background:
+                repeating-linear-gradient(
+                    to bottom,
+                    transparent 0,
+                    transparent 4px,
+                    rgba(60, 255, 114, 0.015) 5px
+                );
         }
 
-        @keyframes blink {
+        /* =========================================
+           ANIMATIONS
+        ========================================= */
+
+        @keyframes pulse {
             0%,
             100% {
                 opacity: 0.3;
@@ -391,71 +558,87 @@
             }
         }
 
-        /* Mobile */
+        @keyframes titleBreath {
+            0%,
+            100% {
+                filter: brightness(0.95);
+            }
+
+            50% {
+                filter: brightness(1.08);
+            }
+        }
+
+        /* =========================================
+           MOBILE
+        ========================================= */
 
         @media (max-width: 700px) {
 
-            body {
-                gap: 30px;
+            .hud {
+                inset: 15px;
+            }
+
+            .emblem {
+                width: 300px;
+                height: 390px;
             }
 
             .title {
-                font-size: 18px;
+                font-size: 42px;
                 letter-spacing: 4px;
             }
 
             .subtitle {
-                font-size: 9px;
+                font-size: 8px;
                 letter-spacing: 3px;
             }
 
+            .divider {
+                margin-top: 22px;
+            }
+
             .timer {
-                gap: 8px;
+                gap: 6px;
+                margin-top: 24px;
             }
 
             .time-box {
                 min-width: 74px;
-                padding: 14px 7px 12px;
+                padding: 14px 5px 12px;
             }
 
             .number {
-                font-size: 38px;
+                font-size: 37px;
             }
 
             .label {
-                font-size: 8px;
-                letter-spacing: 2px;
-                margin-top: 10px;
-            }
-
-            .doom-symbol {
-                width: 280px;
-                height: 360px;
-            }
-
-            .warning {
                 font-size: 7px;
+                letter-spacing: 2px;
+            }
+
+            .system {
+                font-size: 6px;
                 letter-spacing: 2px;
             }
         }
 
         @media (max-width: 400px) {
 
+            .title {
+                font-size: 36px;
+            }
+
             .timer {
-                gap: 5px;
+                gap: 4px;
             }
 
             .time-box {
                 min-width: 68px;
-                padding: 12px 4px;
             }
 
             .number {
-                font-size: 32px;
-            }
-
-            .label {
-                font-size: 7px;
+                font-size: 31px;
             }
         }
     </style>
@@ -463,44 +646,66 @@
 
 <body>
 
-    <div class="doom-symbol"></div>
+    <div class="atmosphere"></div>
 
-    <div class="title">
-        <span>DOOM</span> IS COMING
-    </div>
+    <div class="emblem"></div>
 
-    <div class="subtitle">
-        December 18, 2026
-    </div>
+    <div class="hud"></div>
 
-    <div class="timer">
+    <div class="content">
 
-        <div class="time-box">
-            <div class="number" id="days">00</div>
-            <div class="label">Days</div>
+        <div class="status">
+            <span class="status-dot"></span>
+            Latveria Network Online
         </div>
 
-        <div class="time-box">
-            <div class="number" id="hours">00</div>
-            <div class="label">Hours</div>
+        <div class="title">
+            <span>DOOM</span> IS COMING
         </div>
 
-        <div class="time-box">
-            <div class="number" id="minutes">00</div>
-            <div class="label">Minutes</div>
+        <div class="subtitle">
+            December 18, 2026
         </div>
 
-        <div class="time-box">
-            <div class="number" id="seconds">00</div>
-            <div class="label">Seconds</div>
+        <div class="divider">
+            <span></span>
+            <i></i>
+            <span></span>
+        </div>
+
+        <div class="timer">
+
+            <div class="time-box">
+                <div class="number" id="days">00</div>
+                <div class="label">Days</div>
+            </div>
+
+            <div class="time-box">
+                <div class="number" id="hours">00</div>
+                <div class="label">Hours</div>
+            </div>
+
+            <div class="time-box">
+                <div class="number" id="minutes">00</div>
+                <div class="label">Minutes</div>
+            </div>
+
+            <div class="time-box">
+                <div class="number" id="seconds">00</div>
+                <div class="label">Seconds</div>
+            </div>
+
+        </div>
+
+        <div class="system">
+            <strong>DOOM PROTOCOL</strong>
+            <span>•</span>
+            <span>Approaching</span>
         </div>
 
     </div>
 
-    <div class="warning">
-        <div class="warning-dot"></div>
-        Latveria Protocol Activated
-    </div>
+    <div class="scanlines"></div>
 
     <script>
         const targetDate =
@@ -512,7 +717,7 @@
 
             const distance = targetDate - now;
 
-            if (distance < 0) {
+            if (distance <= 0) {
 
                 document.getElementById("days").textContent = "00";
                 document.getElementById("hours").textContent = "00";
