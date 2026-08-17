@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شمارش معکوس</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial Black', 'Impact', sans-serif;
+            overflow: hidden;
+        }
+
+        .timer {
+            display: flex;
+            gap: 30px;
+            text-align: center;
+        }
+
+        .time-box {
+            min-width: 110px;
+        }
+
+        .number {
+            font-size: 80px;
+            font-weight: 900;
+            color: #e62429;
+            text-shadow: 
+                0 0 10px #e62429,
+                0 0 20px #e62429,
+                0 0 40px #9b0000,
+                0 0 80px #5c0000;
+            letter-spacing: 2px;
+            line-height: 1;
+        }
+
+        .label {
+            font-size: 16px;
+            color: #c6a700;
+            margin-top: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 8px #c6a700;
+        }
+
+        @media (max-width: 600px) {
+            .timer {
+                gap: 15px;
+            }
+            .number {
+                font-size: 48px;
+            }
+            .time-box {
+                min-width: 70px;
+            }
+            .label {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timer">
+        <div class="time-box">
+            <div class="number" id="days">00</div>
+            <div class="label">روز</div>
+        </div>
+        <div class="time-box">
+            <div class="number" id="hours">00</div>
+            <div class="label">ساعت</div>
+        </div>
+        <div class="time-box">
+            <div class="number" id="minutes">00</div>
+            <div class="label">دقیقه</div>
+        </div>
+        <div class="time-box">
+            <div class="number" id="seconds">00</div>
+            <div class="label">ثانیه</div>
+        </div>
+    </div>
+
+    <script>
+        const targetDate = new Date("2026-12-18T00:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById("days").textContent = "00";
+                document.getElementById("hours").textContent = "00";
+                document.getElementById("minutes").textContent = "00";
+                document.getElementById("seconds").textContent = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").textContent = String(days).padStart(2, "0");
+            document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+            document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+            document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
