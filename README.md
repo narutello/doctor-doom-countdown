@@ -26,15 +26,6 @@ Just Doom.
 - 🕶️ No dependencies
 
 ---
-
-SYSTEM STATUS
-────────────────────
-DOOM        : APPROACHING
-LATVERIA    : ONLINE
-PROTOCOL    : ACTIVE
-COUNTDOWN   : RUNNING
-────────────────────
-
 «The world has been warned.»
 
 👑 Doom awaits.
