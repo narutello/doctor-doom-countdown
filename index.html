@@ -4,47 +4,1976 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Doctor Doom Countdown — Latveria Protocol | DOOM is Coming December 18, 2026</title>
-    <meta name="description" content="Doctor Doom Countdown (Latveria Protocol): a cinematic pure HTML, CSS & JavaScript real-time countdown to December 18, 2026. Experience the metallic Latverian green HUD, boot sequence, threat level, critical mode and the arrival of DOOM. No frameworks, no libraries — just Doom.">
-    <meta name="keywords" content="Doctor Doom, Doom Countdown, Latveria Protocol, Doctor Doom Countdown, December 18 2026, Marvel, cinematic countdown">
-    <meta name="author" content="narutello">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://doctor-doom-countdown.vercel.app/">
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://doctor-doom-countdown.vercel.app/">
-    <meta property="og:title" content="Doctor Doom Countdown — Latveria Protocol">
-    <meta property="og:description" content="Cinematic real-time countdown to Doctor Doom's arrival on December 18, 2026. Pure HTML/CSS/JS. Latveria Protocol activated.">
-    <meta property="og:site_name" content="Doctor Doom Countdown">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Doctor Doom Countdown — Latveria Protocol">
-    <meta name="twitter:description" content="Cinematic real-time countdown to December 18, 2026. DOOM IS COMING.">
-
-    <!-- Structured data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Doctor Doom Countdown",
-      "alternateName": ["Latveria Protocol", "DOOM IS COMING", "Doctor Doom Countdown"],
-      "url": "https://doctor-doom-countdown.vercel.app/",
-      "description": "A cinematic pure HTML, CSS and JavaScript real-time countdown to Doctor Doom's arrival on December 18, 2026. Features Latverian green HUD, boot sequence, critical mode and arrival mode.",
-      "applicationCategory": "EntertainmentApplication",
-      "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "author": {
-        "@type": "Person",
-        "name": "narutello",
-        "url": "https://github.com/narutello"
-      }
-    }
-    </script>
+    <title>DOOM — Latveria Protocol</title>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green: #3cff72;
+            --green-dark: #0c5223;
+            --metal: #c8cfcb;
+            --black: #030504;
+            --danger: #ff3030;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow: hidden;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                radial-gradient(
+                    circle at 50% 45%,
+                    #102418 0%,
+                    #07100a 35%,
+                    #030504 72%,
+                    #010201 100%
+                );
+
+            color: white;
+
+            font-family:
+                'Orbitron',
+                'Arial Black',
+                sans-serif;
+
+            transition:
+                background 1s ease;
+        }
+
+        /* =====================================================
+           CRITICAL MODE
+        ===================================================== */
+
+        body.critical {
+            --green: #ff3030;
+            --green-dark: #651010;
+
+            background:
+                radial-gradient(
+                    circle at 50% 45%,
+                    #301010 0%,
+                    #130606 35%,
+                    #050202 72%,
+                    #010101 100%
+                );
+        }
+
+        body.critical .status-dot {
+            animation:
+                pulse 0.45s infinite;
+        }
+
+        body.critical .time-box {
+            animation:
+                criticalPulse 1.2s infinite;
+        }
+
+        body.critical .hud {
+            border-color:
+                rgba(255, 48, 48, 0.2);
+        }
+
+        @keyframes criticalPulse {
+
+            0%,
+            100% {
+                box-shadow:
+                    inset 0 0 30px rgba(255, 48, 48, 0.02),
+                    0 15px 45px rgba(0, 0, 0, 0.5);
+            }
+
+            50% {
+                box-shadow:
+                    inset 0 0 30px rgba(255, 48, 48, 0.12),
+                    0 0 30px rgba(255, 48, 48, 0.12);
+            }
+        }
+
+        /* =====================================================
+           ARRIVAL MODE
+        ===================================================== */
+
+        body.arrived {
+            --green: #3cff72;
+
+            background:
+                radial-gradient(
+                    circle,
+                    #173b22 0%,
+                    #07150b 35%,
+                    #020402 75%
+                );
+        }
+
+        body.arrived .content {
+            animation:
+                arrivalReveal 1.2s forwards;
+        }
+
+        body.arrived .side-panel,
+        body.arrived .system,
+        body.arrived .divider,
+        body.arrived .subtitle,
+        body.arrived .status {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.arrived .title {
+            font-size:
+                clamp(42px, 8vw, 100px);
+
+            color: var(--green);
+
+            text-shadow:
+                0 0 10px var(--green),
+                0 0 30px var(--green),
+                0 0 80px rgba(60, 255, 114, 0.5);
+        }
+
+        @keyframes arrivalReveal {
+
+            0% {
+                opacity: 0;
+                transform:
+                    scale(1.5);
+                filter:
+                    blur(15px);
+            }
+
+            60% {
+                opacity: 1;
+                transform:
+                    scale(0.98);
+                filter:
+                    blur(0);
+            }
+
+            100% {
+                opacity: 1;
+                transform:
+                    scale(1);
+            }
+        }
+
+        /* =====================================================
+           BOOT SCREEN
+        ===================================================== */
+
+        .boot-screen {
+            position: fixed;
+            inset: 0;
+
+            z-index: 100;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: #010201;
+
+            transition:
+                opacity 0.8s ease,
+                visibility 0.8s ease;
+        }
+
+        .boot-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .boot-content {
+            width: min(520px, 82vw);
+
+            color: #68736c;
+
+            font-size: 10px;
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+        }
+
+        .boot-header {
+            margin-bottom: 28px;
+
+            color: var(--green);
+
+            font-size: 12px;
+            font-weight: 800;
+
+            letter-spacing: 5px;
+
+            text-shadow:
+                0 0 10px var(--green);
+
+            opacity: 0;
+
+            animation:
+                bootFade 0.5s 0.2s forwards;
+        }
+
+        .boot-line {
+            display: flex;
+            justify-content: space-between;
+
+            padding: 9px 0;
+
+            border-bottom:
+                1px solid rgba(60, 255, 114, 0.06);
+
+            opacity: 0;
+        }
+
+        .boot-line span:last-child {
+            color: var(--green);
+
+            font-weight: 700;
+
+            text-shadow:
+                0 0 8px var(--green);
+        }
+
+        .boot-line:nth-child(2) {
+            animation: bootFade .4s .7s forwards;
+        }
+
+        .boot-line:nth-child(3) {
+            animation: bootFade .4s 1.05s forwards;
+        }
+
+        .boot-line:nth-child(4) {
+            animation: bootFade .4s 1.4s forwards;
+        }
+
+        .boot-line:nth-child(5) {
+            animation: bootFade .4s 1.75s forwards;
+        }
+
+        .boot-line:nth-child(6) {
+            animation: bootFade .4s 2.1s forwards;
+        }
+
+        .boot-status {
+            margin-top: 28px;
+
+            text-align: center;
+
+            color: var(--green);
+
+            font-size: 13px;
+            font-weight: 800;
+
+            letter-spacing: 6px;
+
+            text-shadow:
+                0 0 10px var(--green),
+                0 0 25px rgba(60, 255, 114, 0.5);
+
+            opacity: 0;
+
+            animation:
+                protocolReveal .8s 2.55s forwards;
+        }
+
+        .boot-substatus {
+            margin-top: 12px;
+
+            text-align: center;
+
+            color: #4b574f;
+
+            font-size: 8px;
+            letter-spacing: 4px;
+
+            opacity: 0;
+
+            animation:
+                bootFade .5s 3.1s forwards;
+        }
+
+        .boot-corner {
+            position: absolute;
+
+            width: 30px;
+            height: 30px;
+
+            border-color:
+                rgba(60, 255, 114, .5);
+
+            border-style: solid;
+        }
+
+        .boot-corner.top-left {
+            top: 30px;
+            left: 30px;
+            border-width: 1px 0 0 1px;
+        }
+
+        .boot-corner.top-right {
+            top: 30px;
+            right: 30px;
+            border-width: 1px 1px 0 0;
+        }
+
+        .boot-corner.bottom-left {
+            bottom: 30px;
+            left: 30px;
+            border-width: 0 0 1px 1px;
+        }
+
+        .boot-corner.bottom-right {
+            bottom: 30px;
+            right: 30px;
+            border-width: 0 1px 1px 0;
+        }
+
+        @keyframes bootFade {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0);
+            }
+        }
+
+        @keyframes protocolReveal {
+
+            0% {
+                opacity: 0;
+                transform:
+                    scale(.92);
+                filter:
+                    blur(8px);
+            }
+
+            60% {
+                opacity: 1;
+                transform:
+                    scale(1.03);
+                filter:
+                    blur(0);
+            }
+
+            100% {
+                opacity: 1;
+                transform:
+                    scale(1);
+            }
+        }
+
+        /* =====================================================
+           ATMOSPHERE
+        ===================================================== */
+
+        .atmosphere {
+            position: fixed;
+
+            width: 750px;
+            height: 750px;
+
+            left: 50%;
+            top: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(60, 255, 114, .09),
+                    transparent 65%
+                );
+
+            filter:
+                blur(60px);
+
+            transition:
+                background 1s ease;
+        }
+
+        /* =====================================================
+           EMBLEM
+        ===================================================== */
+
+        .emblem {
+            position: absolute;
+
+            width: 470px;
+            height: 570px;
+
+            left: 50%;
+            top: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            opacity: .08;
+
+            border:
+                2px solid var(--green);
+
+            clip-path: polygon(
+                50% 0%,
+                86% 12%,
+                100% 42%,
+                91% 75%,
+                67% 94%,
+                50% 100%,
+                33% 94%,
+                9% 75%,
+                0% 42%,
+                14% 12%
+            );
+
+            transition:
+                border-color 1s ease;
+        }
+
+        /* =====================================================
+           MAIN HUD
+        ===================================================== */
+
+        .hud {
+            position: fixed;
+
+            inset: 35px;
+
+            border:
+                1px solid rgba(60, 255, 114, .07);
+
+            pointer-events: none;
+
+            transition:
+                border-color .5s ease;
+        }
+
+        .hud::before,
+        .hud::after {
+            content: "";
+
+            position: absolute;
+
+            width: 70px;
+            height: 2px;
+
+            background:
+                var(--green);
+
+            box-shadow:
+                0 0 10px var(--green);
+        }
+
+        .hud::before {
+            top: -1px;
+            left: -1px;
+        }
+
+        .hud::after {
+            bottom: -1px;
+            right: -1px;
+        }
+
+        /* =====================================================
+           SIDE PANELS
+        ===================================================== */
+
+        .side-panel {
+            position: fixed;
+
+            top: 50%;
+
+            width: 185px;
+
+            transform:
+                translateY(-50%);
+
+            z-index: 4;
+
+            opacity: 0;
+
+            animation:
+                sideReveal 1s 4s forwards;
+        }
+
+        .side-panel.left {
+            left: 55px;
+        }
+
+        .side-panel.right {
+            right: 55px;
+
+            animation-name:
+                sideRevealRight;
+        }
+
+        @keyframes sideReveal {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(-50%)
+                    translateX(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(-50%)
+                    translateX(0);
+            }
+        }
+
+        @keyframes sideRevealRight {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(-50%)
+                    translateX(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(-50%)
+                    translateX(0);
+            }
+        }
+
+        .panel-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+
+            border-bottom:
+                1px solid rgba(60, 255, 114, .15);
+
+            color: #536057;
+
+            font-size: 7px;
+            font-weight: 700;
+
+            letter-spacing: 3px;
+        }
+
+        .panel-header span:last-child {
+            color: var(--green);
+
+            text-shadow:
+                0 0 7px var(--green);
+        }
+
+        .metric {
+            margin-bottom: 15px;
+        }
+
+        .metric-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 6px;
+
+            color: #56615a;
+
+            font-size: 7px;
+
+            letter-spacing: 2px;
+        }
+
+        .metric-value {
+            color: #829087;
+        }
+
+        .metric-bar {
+            width: 100%;
+            height: 4px;
+
+            overflow: hidden;
+
+            background:
+                rgba(60, 255, 114, .06);
+        }
+
+        .metric-fill {
+            height: 100%;
+
+            background:
+                var(--green);
+
+            box-shadow:
+                0 0 8px var(--green);
+        }
+
+        .power {
+            width: 98%;
+        }
+
+        .armor {
+            width: 94%;
+        }
+
+        .defense {
+            width: 100%;
+        }
+
+        .energy {
+            width: 87%;
+        }
+
+        .panel-footer {
+            margin-top: 22px;
+
+            color: #364139;
+
+            font-size: 6px;
+
+            line-height: 2;
+
+            letter-spacing: 2px;
+        }
+
+        .panel-footer strong {
+            color: #56655b;
+        }
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+            position: relative;
+
+            z-index: 5;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            text-align: center;
+
+            opacity: 0;
+
+            transform:
+                scale(.97);
+
+            animation:
+                mainReveal 1s 3.45s forwards;
+        }
+
+        @keyframes mainReveal {
+
+            to {
+                opacity: 1;
+                transform:
+                    scale(1);
+            }
+        }
+
+        .status {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+
+            color: #68736c;
+
+            font-size: 9px;
+            font-weight: 600;
+
+            letter-spacing: 5px;
+
+            text-transform: uppercase;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background:
+                var(--green);
+
+            box-shadow:
+                0 0 10px var(--green);
+
+            animation:
+                pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: .3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* =====================================================
+           TITLE
+        ===================================================== */
+
+        .title {
+            font-size:
+                clamp(38px, 7vw, 82px);
+
+            font-weight: 900;
+
+            letter-spacing: 8px;
+
+            color: var(--metal);
+
+            text-transform: uppercase;
+
+            text-shadow:
+                0 1px 0 #fff,
+                0 2px 0 #7b817e,
+                0 4px 0 #353a38,
+                0 0 18px rgba(60, 255, 114, .22);
+
+            transition:
+                color .8s ease,
+                text-shadow .8s ease;
+        }
+
+        .title span {
+            color:
+                var(--green);
+
+            text-shadow:
+                0 0 8px var(--green),
+                0 0 25px rgba(60, 255, 114, .4);
+        }
+
+        .subtitle {
+            margin-top: 15px;
+
+            color: #707a74;
+
+            font-size: 10px;
+
+            letter-spacing: 6px;
+        }
+
+        /* =====================================================
+           DIVIDER
+        ===================================================== */
+
+        .divider {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            width: 430px;
+            max-width: 80vw;
+
+            margin-top: 28px;
+        }
+
+        .divider span {
+            flex: 1;
+
+            height: 1px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(60, 255, 114, .4)
+                );
+        }
+
+        .divider span:last-child {
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(60, 255, 114, .4),
+                    transparent
+                );
+        }
+
+        .divider i {
+            width: 7px;
+            height: 7px;
+
+            border:
+                1px solid var(--green);
+
+            transform:
+                rotate(45deg);
+
+            box-shadow:
+                0 0 10px var(--green);
+        }
+
+        /* =====================================================
+           COUNTDOWN
+        ===================================================== */
+
+        .timer {
+            display: flex;
+
+            gap: 18px;
+
+            margin-top: 30px;
+        }
+
+        .time-box {
+            position: relative;
+
+            min-width: 125px;
+
+            padding: 22px 15px 17px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(100, 110, 105, .12),
+                    rgba(3, 5, 4, .92)
+                );
+
+            border:
+                1px solid rgba(150, 160, 155, .22);
+
+            clip-path: polygon(
+                9px 0,
+                calc(100% - 9px) 0,
+                100% 9px,
+                100% calc(100% - 9px),
+                calc(100% - 9px) 100%,
+                9px 100%,
+                0 calc(100% - 9px),
+                0 9px
+            );
+
+            box-shadow:
+                inset 0 0 30px rgba(255, 255, 255, .025),
+                0 15px 45px rgba(0, 0, 0, .5);
+        }
+
+        .time-box::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 38px;
+            height: 2px;
+
+            background:
+                var(--green);
+
+            box-shadow:
+                0 0 9px var(--green);
+        }
+
+        .time-box::after {
+            content: "";
+
+            position: absolute;
+
+            right: 0;
+            bottom: 0;
+
+            width: 38px;
+            height: 2px;
+
+            background:
+                var(--green-dark);
+        }
+
+        .number {
+            color: #dce1de;
+
+            font-size: 65px;
+
+            font-weight: 800;
+
+            line-height: 1;
+
+            font-variant-numeric:
+                tabular-nums;
+
+            text-shadow:
+                0 1px 0 #fff,
+                0 0 12px rgba(60, 255, 114, .25);
+        }
+
+        .label {
+            margin-top: 13px;
+
+            color: #67716b;
+
+            font-size: 9px;
+
+            letter-spacing: 4px;
+        }
+
+        /* =====================================================
+           THREAT LEVEL
+        ===================================================== */
+
+        .threat {
+            position: fixed;
+
+            bottom: 45px;
+            left: 55px;
+
+            z-index: 6;
+
+            width: 185px;
+
+            opacity: 0;
+
+            animation:
+                sideReveal 1s 4.2s forwards;
+        }
+
+        .threat-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 8px;
+
+            color: #4e5952;
+
+            font-size: 7px;
+
+            letter-spacing: 3px;
+        }
+
+        .threat-level {
+            color: var(--green);
+
+            font-weight: 800;
+
+            text-shadow:
+                0 0 8px var(--green);
+        }
+
+        .threat-track {
+            width: 100%;
+            height: 5px;
+
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(60,255,114,.12) 0,
+                    rgba(60,255,114,.12) 7px,
+                    transparent 7px,
+                    transparent 10px
+                );
+        }
+
+        .threat-fill {
+            width: 10%;
+            height: 100%;
+
+            background:
+                var(--green);
+
+            box-shadow:
+                0 0 8px var(--green);
+
+            transition:
+                width .6s ease,
+                background .6s ease;
+        }
+
+        /* =====================================================
+           SYSTEM MESSAGE
+        ===================================================== */
+
+        .system-message {
+            position: fixed;
+
+            right: 55px;
+            bottom: 45px;
+
+            z-index: 6;
+
+            width: 260px;
+
+            color: #4e5952;
+
+            font-size: 7px;
+
+            letter-spacing: 2px;
+
+            text-align: right;
+
+            text-transform: uppercase;
+        }
+
+        .system-message::before {
+            content: "> ";
+
+            color: var(--green);
+        }
+
+        .message-text {
+            color: #657169;
+        }
+
+        .cursor {
+            display: inline-block;
+
+            width: 5px;
+            height: 9px;
+
+            margin-left: 4px;
+
+            background:
+                var(--green);
+
+            animation:
+                cursorBlink .7s infinite;
+        }
+
+        @keyframes cursorBlink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* =====================================================
+           FINAL ARRIVAL MESSAGE
+        ===================================================== */
+
+        .arrival-message {
+            display: none;
+
+            margin-top: 35px;
+
+            color: var(--green);
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: 6px;
+
+            text-shadow:
+                0 0 10px var(--green),
+                0 0 30px var(--green);
+
+            animation:
+                arrivalPulse 1.5s infinite;
+        }
+
+        body.arrived .arrival-message {
+            display: block;
+        }
+
+        @keyframes arrivalPulse {
+
+            0%,
+            100% {
+                opacity: .5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* =====================================================
+           SYSTEM
+        ===================================================== */
+
+        .system {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-top: 25px;
+
+            color: #414b45;
+
+            font-size: 8px;
+
+            letter-spacing: 3px;
+        }
+
+        .system strong {
+            color: #617069;
+        }
+
+        /* =====================================================
+           SCANLINES
+        ===================================================== */
+
+        .scanlines {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 15;
+
+            pointer-events: none;
+
+            background:
+                repeating-linear-gradient(
+                    to bottom,
+                    transparent 0,
+                    transparent 4px,
+                    rgba(60,255,114,.015) 5px
+                );
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .side-panel,
+            .threat,
+            .system-message {
+                display: none;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .hud {
+                inset: 15px;
+            }
+
+            .emblem {
+                width: 300px;
+                height: 390px;
+            }
+
+            .title {
+                font-size: 42px;
+                letter-spacing: 4px;
+            }
+
+            .subtitle {
+                font-size: 8px;
+                letter-spacing: 3px;
+            }
+
+            .timer {
+                gap: 6px;
+            }
+
+            .time-box {
+                min-width: 74px;
+
+                padding:
+                    14px 5px 12px;
+            }
+
+            .number {
+                font-size: 37px;
+            }
+
+            .label {
+                font-size: 7px;
+                letter-spacing: 2px;
+            }
+
+
+            .arrival-message {
+                font-size: 8px;
+                letter-spacing: 3px;
+            }
+        }
+
+        @media (max-width: 400px) {
+
+            .title {
+                font-size: 36px;
+            }
+
+            .timer {
+                gap: 4px;
+            }
+
+            .time-box {
+                min-width: 68px;
+            }
+
+            .number {
+                font-size: 31px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =====================================================
+         BOOT
+    ===================================================== -->
+
+    <div class="boot-screen" id="bootScreen">
+
+        <div class="boot-corner top-left"></div>
+        <div class="boot-corner top-right"></div>
+        <div class="boot-corner bottom-left"></div>
+        <div class="boot-corner bottom-right"></div>
+
+        <div class="boot-content">
+
+            <div class="boot-header">
+                LATVERIA SYSTEM
+            </div>
+
+            <div class="boot-line">
+                <span>Power Core</span>
+                <span>ONLINE</span>
+            </div>
+
+            <div class="boot-line">
+                <span>Armor System</span>
+                <span>ONLINE</span>
+            </div>
+
+            <div class="boot-line">
+                <span>Defense Grid</span>
+                <span>ONLINE</span>
+            </div>
+
+            <div class="boot-line">
+                <span>Latveria Network</span>
+                <span>CONNECTED</span>
+            </div>
+
+            <div class="boot-line">
+                <span>Doom Protocol</span>
+                <span>ARMED</span>
+            </div>
+
+            <div class="boot-status">
+                DOOM PROTOCOL ACTIVATED
+            </div>
+
+            <div class="boot-substatus">
+                Prepare for arrival
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- =====================================================
+         ATMOSPHERE
+    ===================================================== -->
+
+    <div class="atmosphere"></div>
+
+    <div class="emblem"></div>
+
+    <div class="hud"></div>
+
+
+    <!-- =====================================================
+         LEFT PANEL
+    ===================================================== -->
+
+    <aside class="side-panel left">
+
+        <div class="panel-header">
+            <span>DOOM SYSTEM</span>
+            <span>● ONLINE</span>
+        </div>
+
+        <div class="metric">
+
+            <div class="metric-top">
+                <span>POWER CORE</span>
+                <span>98%</span>
+            </div>
+
+            <div class="metric-bar">
+                <div class="metric-fill power"></div>
+            </div>
+
+        </div>
+
+        <div class="metric">
+
+            <div class="metric-top">
+                <span>ARMOR</span>
+                <span>94%</span>
+            </div>
+
+            <div class="metric-bar">
+                <div class="metric-fill armor"></div>
+            </div>
+
+        </div>
+
+        <div class="metric">
+
+            <div class="metric-top">
+                <span>DEFENSE GRID</span>
+                <span>100%</span>
+            </div>
+
+            <div class="metric-bar">
+                <div class="metric-fill defense"></div>
+            </div>
+
+        </div>
+
+        <div class="panel-footer">
+            <strong>STATUS:</strong> OPERATIONAL<br>
+            <strong>SECTOR:</strong> LATVERIA-01<br>
+            <strong>PROTOCOL:</strong> DOOM
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         RIGHT PANEL
+    ===================================================== -->
+
+    <aside class="side-panel right">
+
+        <div class="panel-header">
+            <span>LATVERIA</span>
+            <span>SECURE</span>
+        </div>
+
+        <div class="metric">
+
+            <div class="metric-top">
+                <span>ENERGY</span>
+                <span>87%</span>
+            </div>
+
+            <div class="metric-bar">
+                <div class="metric-fill energy"></div>
+            </div>
+
+        </div>
+
+        <div class="metric">
+
+            <div class="metric-top">
+                <span>NETWORK</span>
+                <span>100%</span>
+            </div>
+
+            <div class="metric-bar">
+                <div class="metric-fill defense"></div>
+            </div>
+
+        </div>
+
+        <div class="metric">
+
+            <div class="metric-top">
+                <span>THREAT</span>
+                <span id="panelThreat">LOW</span>
+            </div>
+
+            <div class="metric-bar">
+                <div
+                    class="metric-fill power"
+                    id="panelThreatBar"
+                ></div>
+            </div>
+
+        </div>
+
+        <div class="panel-footer">
+            <strong>COMMAND:</strong> ACTIVE<br>
+            <strong>ACCESS:</strong> AUTHORIZED<br>
+            <strong>PROTOCOL:</strong> FINAL
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         THREAT
+    ===================================================== -->
+
+    <div class="threat">
+
+        <div class="threat-header">
+
+            <span>THREAT LEVEL</span>
+
+            <span
+                class="threat-level"
+                id="threatLevel"
+            >
+                LOW
+            </span>
+
+        </div>
+
+        <div class="threat-track">
+
+            <div
+                class="threat-fill"
+                id="threatFill"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SYSTEM MESSAGE
+    ===================================================== -->
+
+    <div class="system-message">
+
+        <span
+            class="message-text"
+            id="systemMessage"
+        >
+            LATVERIA NETWORK SECURED
+        </span>
+
+        <span class="cursor"></span>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN
+    ===================================================== -->
+
+    <main class="content">
+
+        <div class="status">
+
+            <span class="status-dot"></span>
+
+            <span id="networkStatus">
+                LATVERIA NETWORK ONLINE
+            </span>
+
+        </div>
+
+
+        <div class="title">
+            <span id="doomTitle">DOOM</span>
+            <span id="titleRest"> IS COMING</span>
+        </div>
+
+
+        <div class="subtitle">
+            December 18, 2026
+        </div>
+
+
+        <div class="divider">
+            <span></span>
+            <i></i>
+            <span></span>
+        </div>
+
+
+        <!-- COUNTDOWN -->
+
+        <div class="timer">
+
+            <div class="time-box">
+
+                <div
+                    class="number"
+                    id="days"
+                >
+                    00
+                </div>
+
+                <div class="label">
+                    Days
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="number"
+                    id="hours"
+                >
+                    00
+                </div>
+
+                <div class="label">
+                    Hours
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="number"
+                    id="minutes"
+                >
+                    00
+                </div>
+
+                <div class="label">
+                    Minutes
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="number"
+                    id="seconds"
+                >
+                    00
+                </div>
+
+                <div class="label">
+                    Seconds
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="system">
+
+            <strong>
+                DOOM PROTOCOL
+            </strong>
+
+            <span>•</span>
+
+            <span id="protocolStatus">
+                APPROACHING
+            </span>
+
+        </div>
+
+
+        <!-- ARRIVAL -->
+
+        <div
+            class="arrival-message"
+            id="arrivalMessage"
+        >
+            DOOM HAS ARRIVED
+        </div>
+
+    </main>
+
+
+    <div class="scanlines"></div>
+
+
+    <script>
+
+        /* =====================================================
+           CONFIG
+        ===================================================== */
+
+        const targetDate =
+            new Date(
+                "2026-12-18T00:00:00"
+            ).getTime();
+
+
+        /* =====================================================
+           SYSTEM MESSAGES
+        ===================================================== */
+
+        const messages = [
+
+            "LATVERIA NETWORK SECURED",
+
+            "DOOM PROTOCOL ARMED",
+
+            "AVENGERS THREAT DETECTED",
+
+            "POWER CORE STABLE",
+
+            "DEFENSE GRID ONLINE",
+
+            "DOOM IS APPROACHING"
+
+        ];
+
+        let messageIndex = 0;
+
+
+        function typeMessage(text) {
+
+            const element =
+                document.getElementById(
+                    "systemMessage"
+                );
+
+            element.textContent = "";
+
+            let index = 0;
+
+            const interval =
+                setInterval(() => {
+
+                    element.textContent +=
+                        text[index];
+
+                    index++;
+
+                    if (index >= text.length) {
+
+                        clearInterval(interval);
+
+                    }
+
+                }, 35);
+        }
+
+
+        function rotateMessages() {
+
+            typeMessage(
+                messages[messageIndex]
+            );
+
+            messageIndex =
+                (messageIndex + 1) %
+                messages.length;
+        }
+
+
+        rotateMessages();
+
+        setInterval(
+            rotateMessages,
+            5000
+        );
+
+
+        /* =====================================================
+           COUNTDOWN
+        ===================================================== */
+
+        function updateCountdown() {
+
+            const now =
+                Date.now();
+
+            const distance =
+                targetDate - now;
+
+
+            /*
+             * ARRIVED
+             */
+
+            if (distance <= 0) {
+
+                document.body.classList.add(
+                    "arrived"
+                );
+
+                document.getElementById(
+                    "days"
+                ).textContent = "00";
+
+                document.getElementById(
+                    "hours"
+                ).textContent = "00";
+
+                document.getElementById(
+                    "minutes"
+                ).textContent = "00";
+
+                document.getElementById(
+                    "seconds"
+                ).textContent = "00";
+
+                document.getElementById(
+                    "doomTitle"
+                ).textContent =
+                    "DOOM";
+
+                document.getElementById(
+                    "titleRest"
+                ).textContent =
+                    " HAS ARRIVED";
+
+                document.getElementById(
+                    "protocolStatus"
+                ).textContent =
+                    "COMPLETE";
+
+                document.getElementById(
+                    "networkStatus"
+                ).textContent =
+                    "LATVERIA PROTOCOL COMPLETE";
+
+                return;
+            }
+
+
+            /*
+             * TIME
+             */
+
+            const days =
+                Math.floor(
+                    distance /
+                    (1000 * 60 * 60 * 24)
+                );
+
+            const hours =
+                Math.floor(
+                    (
+                        distance %
+                        (1000 * 60 * 60 * 24)
+                    ) /
+                    (1000 * 60 * 60)
+                );
+
+            const minutes =
+                Math.floor(
+                    (
+                        distance %
+                        (1000 * 60 * 60)
+                    ) /
+                    (1000 * 60)
+                );
+
+            const seconds =
+                Math.floor(
+                    (
+                        distance %
+                        (1000 * 60)
+                    ) /
+                    1000
+                );
+
+
+            document.getElementById(
+                "days"
+            ).textContent =
+                String(days).padStart(2, "0");
+
+            document.getElementById(
+                "hours"
+            ).textContent =
+                String(hours).padStart(2, "0");
+
+            document.getElementById(
+                "minutes"
+            ).textContent =
+                String(minutes).padStart(2, "0");
+
+            document.getElementById(
+                "seconds"
+            ).textContent =
+                String(seconds).padStart(2, "0");
+
+
+            /*
+             * FINAL 24 HOURS
+             */
+
+            if (
+                distance <=
+                24 * 60 * 60 * 1000
+            ) {
+
+                document.body.classList.add(
+                    "critical"
+                );
+
+                document.getElementById(
+                    "protocolStatus"
+                ).textContent =
+                    "CRITICAL";
+
+            } else {
+
+                document.body.classList.remove(
+                    "critical"
+                );
+
+                document.getElementById(
+                    "protocolStatus"
+                ).textContent =
+                    "APPROACHING";
+            }
+        }
+
+        /* =====================================================
+           THREAT SYSTEM
+        ===================================================== */
+
+        function updateThreat() {
+
+            const now =
+                Date.now();
+
+            const distance =
+                targetDate -
+                now;
+
+            const oneDay =
+                24 * 60 * 60 * 1000;
+
+            const oneWeek =
+                7 * oneDay;
+
+            const oneMonth =
+                30 * oneDay;
+
+
+            let level;
+            let value;
+
+
+            if (distance <= oneDay) {
+
+                level = "CRITICAL";
+                value = 100;
+
+            } else if (distance <= oneWeek) {
+
+                level = "HIGH";
+                value = 75;
+
+            } else if (distance <= oneMonth) {
+
+                level = "ELEVATED";
+                value = 50;
+
+            } else {
+
+                level = "LOW";
+                value = 20;
+            }
+
+
+            document.getElementById(
+                "threatLevel"
+            ).textContent =
+                level;
+
+            document.getElementById(
+                "threatFill"
+            ).style.width =
+                `${value}%`;
+
+            document.getElementById(
+                "panelThreat"
+            ).textContent =
+                level;
+
+            document.getElementById(
+                "panelThreatBar"
+            ).style.width =
+                `${value}%`;
+        }
+
+
+        function updateUI() {
+
+            updateCountdown();
+
+
+            updateThreat();
+        }
+
+
+        updateUI();
+
+        setInterval(
+            updateUI,
+            1000
+        );
+
+
+        /* =====================================================
+           BOOT
+        ===================================================== */
+
+        window.addEventListener(
+            "load",
+            () => {
+
+                setTimeout(
+                    () => {
+
+                        document
+                            .getElementById(
+                                "bootScreen"
+                            )
+                            .classList
+                            .add("hidden");
+
+                    },
+                    4300
+                );
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
