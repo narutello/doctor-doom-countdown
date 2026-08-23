@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://doctor-doom-countdown.vercel.app/sitemap.xml
-
-# Agent-friendly resources
-# llms.txt: https://doctor-doom-countdown.vercel.app/llms.txt
