@@ -17,666 +17,252 @@
     <!-- Favicon (simple green D mask) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23030504'/><text y='.9em' font-size='80' x='50%' text-anchor='middle' fill='%233cff72' font-family='monospace' font-weight='900'>D</text></svg>">
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+    <link rel="stylesheet" href="style.css">
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --green: #3cff72;
-            --green-dark: #0c5223;
-            --metal: #c8cfcb;
-            --black: #030504;
-            --danger: #ff3030;
-            --green-glow: 0 0 10px var(--green);
-            --green-glow-strong: 0 0 10px var(--green), 0 0 25px rgba(60, 255, 114, 0.5);
-            --panel-width: 185px;
-            --hud-inset: 35px;
-            --side-offset: 55px;
-            --glow-intensity: 1;
-        }
-
-        body {
-            min-height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: radial-gradient(circle at 50% 45%, #102418 0%, #07100a 35%, #030504 72%, #010201 100%);
-            color: white;
-            font-family: 'Orbitron', 'Arial Black', sans-serif;
-            transition: background 1s ease;
-        }
-
-        body.threat-elevated { --glow-intensity: 1.3; }
-        body.threat-high { --glow-intensity: 1.6; }
-        body.threat-critical { --glow-intensity: 2; }
-
-        body.critical {
-            --green: #ff3030;
-            --green-dark: #651010;
-            background: radial-gradient(circle at 50% 45%, #301010 0%, #130606 35%, #050202 72%, #010101 100%);
-        }
-        body.critical .status-dot { animation: pulse 0.45s infinite; }
-        body.critical .time-box { animation: criticalPulse 1.2s infinite; }
-        body.critical .hud { border-color: rgba(255, 48, 48, 0.2); }
-        body.critical .title { animation: mildGlitch 8s infinite; }
-
-        @keyframes criticalPulse {
-            0%, 100% { box-shadow: inset 0 0 30px rgba(255, 48, 48, 0.02), 0 15px 45px rgba(0, 0, 0, 0.5); }
-            50% { box-shadow: inset 0 0 30px rgba(255, 48, 48, 0.12), 0 0 30px rgba(255, 48, 48, 0.12); }
-        }
-
-        @keyframes mildGlitch {
-            0%, 92%, 100% { transform: translate(0); text-shadow: 0 1px 0 #fff, 0 2px 0 #7b817e, 0 4px 0 #353a38, 0 0 18px rgba(255, 48, 48, 0.3); }
-            93% { transform: translate(-2px, 1px); text-shadow: -2px 0 #ff3030, 2px 0 #3cff72; }
-            94% { transform: translate(2px, -1px); text-shadow: 2px 0 #ff3030, -2px 0 #3cff72; }
-            95% { transform: translate(0); }
-        }
-
-        body.arrived {
-            --green: #3cff72;
-            background: radial-gradient(circle, #173b22 0%, #07150b 35%, #020402 75%);
-        }
-        body.arrived .content { animation: arrivalReveal 1.2s forwards; }
-        body.arrived .side-panel,
-        body.arrived .system,
-        body.arrived .divider,
-        body.arrived .subtitle,
-        body.arrived .status,
-        body.arrived .mobile-threat,
-        body.arrived .controls { opacity: 0; pointer-events: none; }
-        body.arrived .title {
-            font-size: clamp(42px, 8vw, 100px);
-            color: var(--green);
-            text-shadow: 0 0 10px var(--green), 0 0 30px var(--green), 0 0 80px rgba(60, 255, 114, 0.5);
-            animation: none;
-        }
-        body.arrived .arrival-message { display: block; }
-
-        @keyframes arrivalReveal {
-            0% { opacity: 0; transform: scale(1.5); filter: blur(15px); }
-            60% { opacity: 1; transform: scale(0.98); filter: blur(0); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .boot-screen {
-            position: fixed; inset: 0; z-index: 100;
-            display: flex; justify-content: center; align-items: center;
-            background: #010201;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
-        .boot-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .boot-content { width: min(520px, 82vw); color: #68736c; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; }
-        .boot-header { margin-bottom: 28px; color: var(--green); font-size: 12px; font-weight: 800; letter-spacing: 5px; text-shadow: var(--green-glow); opacity: 0; animation: bootFade 0.5s 0.2s forwards; }
-        .boot-line { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(60, 255, 114, 0.06); opacity: 0; }
-        .boot-line span:last-child { color: var(--green); font-weight: 700; text-shadow: 0 0 8px var(--green); }
-        .boot-line:nth-child(2) { animation: bootFade 0.4s 0.7s forwards; }
-        .boot-line:nth-child(3) { animation: bootFade 0.4s 1.05s forwards; }
-        .boot-line:nth-child(4) { animation: bootFade 0.4s 1.4s forwards; }
-        .boot-line:nth-child(5) { animation: bootFade 0.4s 1.75s forwards; }
-        .boot-line:nth-child(6) { animation: bootFade 0.4s 2.1s forwards; }
-        .boot-status { margin-top: 28px; text-align: center; color: var(--green); font-size: 13px; font-weight: 800; letter-spacing: 6px; text-shadow: var(--green-glow-strong); opacity: 0; animation: protocolReveal 0.8s 2.55s forwards; }
-        .boot-substatus { margin-top: 12px; text-align: center; color: #4b574f; font-size: 8px; letter-spacing: 4px; opacity: 0; animation: bootFade 0.5s 3.1s forwards; }
-        .boot-corner { position: absolute; width: 30px; height: 30px; border-color: rgba(60, 255, 114, 0.5); border-style: solid; }
-        .boot-corner.top-left { top: 30px; left: 30px; border-width: 1px 0 0 1px; }
-        .boot-corner.top-right { top: 30px; right: 30px; border-width: 1px 1px 0 0; }
-        .boot-corner.bottom-left { bottom: 30px; left: 30px; border-width: 0 0 1px 1px; }
-        .boot-corner.bottom-right { bottom: 30px; right: 30px; border-width: 0 1px 1px 0; }
-
-        @keyframes bootFade {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes protocolReveal {
-            0% { opacity: 0; transform: scale(0.92); filter: blur(8px); }
-            60% { opacity: 1; transform: scale(1.03); filter: blur(0); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .atmosphere {
-            position: fixed; width: 750px; height: 750px; left: 50%; top: 50%;
-            transform: translate(-50%, -50%); border-radius: 50%;
-            background: radial-gradient(circle, rgba(60, 255, 114, calc(0.09 * var(--glow-intensity))), transparent 65%);
-            filter: blur(60px); transition: background 1s ease;
-        }
-        .emblem {
-            position: absolute; width: 470px; height: 570px; left: 50%; top: 50%;
-            transform: translate(-50%, -50%); opacity: 0.08;
-            border: 2px solid var(--green);
-            clip-path: polygon(50% 0%, 86% 12%, 100% 42%, 91% 75%, 67% 94%, 50% 100%, 33% 94%, 9% 75%, 0% 42%, 14% 12%);
-            transition: border-color 1s ease, opacity 0.8s ease;
-        }
-        body.threat-high .emblem, body.threat-critical .emblem { opacity: 0.12; }
-
-        .hud {
-            position: fixed; inset: var(--hud-inset);
-            border: 1px solid rgba(60, 255, 114, 0.07); pointer-events: none;
-            transition: border-color 0.5s ease;
-        }
-        .hud::before, .hud::after {
-            content: ""; position: absolute; width: 70px; height: 2px;
-            background: var(--green); box-shadow: var(--green-glow);
-        }
-        .hud::before { top: -1px; left: -1px; }
-        .hud::after { bottom: -1px; right: -1px; }
-
-        .side-panel {
-            position: fixed; top: 50%; width: var(--panel-width);
-            transform: translateY(-50%); z-index: 4; opacity: 0;
-            animation: sideReveal 1s 4s forwards;
-        }
-        .side-panel.left { left: var(--side-offset); }
-        .side-panel.right { right: var(--side-offset); animation-name: sideRevealRight; }
-
-        @keyframes sideReveal {
-            from { opacity: 0; transform: translateY(-50%) translateX(15px); }
-            to { opacity: 1; transform: translateY(-50%) translateX(0); }
-        }
-        @keyframes sideRevealRight {
-            from { opacity: 0; transform: translateY(-50%) translateX(-15px); }
-            to { opacity: 1; transform: translateY(-50%) translateX(0); }
-        }
-
-        .panel-header {
-            display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px;
-            border-bottom: 1px solid rgba(60, 255, 114, 0.15); color: #536057;
-            font-size: 7px; font-weight: 700; letter-spacing: 3px;
-        }
-        .panel-header span:last-child { color: var(--green); text-shadow: 0 0 7px var(--green); }
-        .metric { margin-bottom: 15px; }
-        .metric-top { display: flex; justify-content: space-between; margin-bottom: 6px; color: #56615a; font-size: 7px; letter-spacing: 2px; }
-        .metric-bar { width: 100%; height: 4px; overflow: hidden; background: rgba(60, 255, 114, 0.06); }
-        .metric-fill { height: 100%; background: var(--green); box-shadow: 0 0 8px var(--green); }
-        .power { width: 98%; } .armor { width: 94%; } .defense { width: 100%; } .energy { width: 87%; }
-        .panel-footer { margin-top: 22px; color: #364139; font-size: 6px; line-height: 2; letter-spacing: 2px; }
-        .panel-footer strong { color: #56655b; }
-
-        .content {
-            position: relative; z-index: 5; display: flex; flex-direction: column;
-            align-items: center; text-align: center; opacity: 0; transform: scale(0.97);
-            animation: mainReveal 1s 3.45s forwards;
-        }
-        @keyframes mainReveal { to { opacity: 1; transform: scale(1); } }
-
-        .status {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
-            color: #68736c; font-size: 9px; font-weight: 600; letter-spacing: 5px; text-transform: uppercase;
-        }
-        .status-dot {
-            width: 6px; height: 6px; border-radius: 50%; background: var(--green);
-            box-shadow: var(--green-glow); animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-
-        .title {
-            font-size: clamp(38px, 7vw, 82px); font-weight: 900; letter-spacing: 8px;
-            color: var(--metal); text-transform: uppercase;
-            text-shadow: 0 1px 0 #fff, 0 2px 0 #7b817e, 0 4px 0 #353a38, 0 0 18px rgba(60, 255, 114, 0.22);
-            transition: color 0.8s ease, text-shadow 0.8s ease;
-        }
-        .title span {
-            color: var(--green);
-            text-shadow: 0 0 8px var(--green), 0 0 calc(25px * var(--glow-intensity)) rgba(60, 255, 114, 0.4);
-        }
-        .subtitle { margin-top: 15px; color: #707a74; font-size: 10px; letter-spacing: 6px; }
-
-        .divider {
-            display: flex; align-items: center; gap: 14px; width: 430px; max-width: 80vw; margin-top: 28px;
-        }
-        .divider span { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(60, 255, 114, 0.4)); }
-        .divider span:last-child { background: linear-gradient(90deg, rgba(60, 255, 114, 0.4), transparent); }
-        .divider i {
-            width: 7px; height: 7px; border: 1px solid var(--green); transform: rotate(45deg); box-shadow: var(--green-glow);
-        }
-
-        .timer { display: flex; gap: 18px; margin-top: 30px; }
-        .time-box {
-            position: relative; min-width: 125px; padding: 22px 15px 17px;
-            background: linear-gradient(145deg, rgba(100, 110, 105, 0.12), rgba(3, 5, 4, 0.92));
-            border: 1px solid rgba(150, 160, 155, 0.22);
-            clip-path: polygon(9px 0, calc(100% - 9px) 0, 100% 9px, 100% calc(100% - 9px), calc(100% - 9px) 100%, 9px 100%, 0 calc(100% - 9px), 0 9px);
-            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.025), 0 15px 45px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-        }
-        .time-box::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 38px; height: 2px;
-            background: var(--green); box-shadow: 0 0 9px var(--green);
-        }
-        .time-box::after {
-            content: ""; position: absolute; right: 0; bottom: 0; width: 38px; height: 2px;
-            background: var(--green-dark);
-        }
-        .number {
-            color: #dce1de; font-size: 65px; font-weight: 800; line-height: 1;
-            font-variant-numeric: tabular-nums;
-            text-shadow: 0 1px 0 #fff, 0 0 12px rgba(60, 255, 114, 0.25);
-            transition: opacity 0.18s ease, transform 0.18s ease;
-        }
-        .number.tick { opacity: 0.35; transform: translateY(-6px); }
-        .label { margin-top: 13px; color: #67716b; font-size: 9px; letter-spacing: 4px; }
-
-        .threat {
-            position: fixed; bottom: 45px; left: var(--side-offset); z-index: 6;
-            width: var(--panel-width); opacity: 0; animation: sideReveal 1s 4.2s forwards;
-        }
-        .threat-header {
-            display: flex; justify-content: space-between; margin-bottom: 8px;
-            color: #4e5952; font-size: 7px; letter-spacing: 3px;
-        }
-        .threat-level { color: var(--green); font-weight: 800; text-shadow: 0 0 8px var(--green); }
-        .threat-track {
-            width: 100%; height: 5px;
-            background: repeating-linear-gradient(90deg, rgba(60,255,114,0.12) 0, rgba(60,255,114,0.12) 7px, transparent 7px, transparent 10px);
-        }
-        .threat-fill {
-            width: 10%; height: 100%; background: var(--green); box-shadow: 0 0 8px var(--green);
-            transition: width 0.6s ease, background 0.6s ease;
-        }
-
-        .mobile-threat {
-            display: none; position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
-            z-index: 6; width: min(280px, 80vw); text-align: center; opacity: 0;
-            animation: mainReveal 1s 4.2s forwards;
-        }
-        .mobile-threat .threat-header { justify-content: center; gap: 12px; margin-bottom: 6px; }
-
-        .system-message {
-            position: fixed; right: var(--side-offset); bottom: 45px; z-index: 6;
-            width: 260px; color: #4e5952; font-size: 7px; letter-spacing: 2px;
-            text-align: right; text-transform: uppercase;
-        }
-        .system-message::before { content: "> "; color: var(--green); }
-        .message-text { color: #657169; }
-        .cursor {
-            display: inline-block; width: 5px; height: 9px; margin-left: 4px;
-            background: var(--green); animation: cursorBlink 0.7s infinite;
-        }
-        @keyframes cursorBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-
-        .arrival-message {
-            display: none; margin-top: 35px; color: var(--green); font-size: 11px;
-            font-weight: 700; letter-spacing: 6px;
-            text-shadow: 0 0 10px var(--green), 0 0 30px var(--green);
-            animation: arrivalPulse 1.5s infinite;
-        }
-        @keyframes arrivalPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-
-        .system {
-            display: flex; align-items: center; gap: 15px; margin-top: 25px;
-            color: #414b45; font-size: 8px; letter-spacing: 3px;
-        }
-        .system strong { color: #617069; }
-
-        .controls {
-            position: fixed; top: 22px; right: 22px; z-index: 20;
-            display: flex; gap: 12px; opacity: 0; animation: mainReveal 0.8s 4.5s forwards;
-        }
-        .ctrl-btn {
-            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-            background: rgba(3, 5, 4, 0.85); border: 1px solid rgba(60, 255, 114, 0.45);
-            color: var(--green); font-size: 16px; font-family: inherit; cursor: pointer;
-            transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-            box-shadow: 0 0 12px rgba(60, 255, 114, 0.15);
-            clip-path: polygon(5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px), 0 5px);
-        }
-        .ctrl-btn:hover {
-            color: #fff; border-color: var(--green); background: rgba(60, 255, 114, 0.15);
-            box-shadow: 0 0 18px rgba(60, 255, 114, 0.35);
-        }
-        .ctrl-btn.active {
-            color: var(--green); border-color: var(--green); background: rgba(60, 255, 114, 0.12);
-            text-shadow: 0 0 10px var(--green); box-shadow: 0 0 16px rgba(60, 255, 114, 0.4);
-        }
-
-        .scanlines {
-            position: fixed; inset: 0; z-index: 15; pointer-events: none;
-            background: repeating-linear-gradient(to bottom, transparent 0, transparent 4px, rgba(60,255,114,0.015) 5px);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            .number.tick { opacity: 1; transform: none; }
-            body.critical .title { animation: none; }
-        }
-
-        @media (max-width: 1100px) {
-            .side-panel, .threat, .system-message { display: none; }
-            .mobile-threat { display: block; }
-        }
-        @media (max-width: 700px) {
-            .hud { inset: 15px; }
-            .emblem { width: 300px; height: 390px; }
-            .title { font-size: 42px; letter-spacing: 4px; }
-            .subtitle { font-size: 8px; letter-spacing: 3px; }
-            .timer { gap: 6px; }
-            .time-box { min-width: 74px; padding: 14px 5px 12px; }
-            .number { font-size: 37px; }
-            .label { font-size: 7px; letter-spacing: 2px; }
-            .arrival-message { font-size: 8px; letter-spacing: 3px; }
-            .controls { top: 14px; right: 14px; }
-            .ctrl-btn { width: 36px; height: 36px; font-size: 14px; }
-        }
-        @media (max-width: 400px) {
-            .title { font-size: 36px; }
-            .timer { gap: 4px; }
-            .time-box { min-width: 68px; }
-            .number { font-size: 31px; }
-        }
-    </style>
 </head>
+
 <body>
+
+    <!-- =====================================================
+         BOOT SCREEN
+    ===================================================== -->
 
     <div class="boot-screen" id="bootScreen">
         <div class="boot-corner top-left"></div>
         <div class="boot-corner top-right"></div>
         <div class="boot-corner bottom-left"></div>
         <div class="boot-corner bottom-right"></div>
+
         <div class="boot-content">
             <div class="boot-header">LATVERIA SYSTEM</div>
-            <div class="boot-line"><span>Power Core</span><span>ONLINE</span></div>
-            <div class="boot-line"><span>Armor System</span><span>ONLINE</span></div>
-            <div class="boot-line"><span>Defense Grid</span><span>ONLINE</span></div>
-            <div class="boot-line"><span>Latveria Network</span><span>CONNECTED</span></div>
-            <div class="boot-line"><span>Doom Protocol</span><span>ARMED</span></div>
+
+            <div class="boot-line">
+                <span>Power Core</span>
+                <span>ONLINE</span>
+            </div>
+            <div class="boot-line">
+                <span>Armor System</span>
+                <span>ONLINE</span>
+            </div>
+            <div class="boot-line">
+                <span>Defense Grid</span>
+                <span>ONLINE</span>
+            </div>
+            <div class="boot-line">
+                <span>Latveria Network</span>
+                <span>CONNECTED</span>
+            </div>
+            <div class="boot-line">
+                <span>Doom Protocol</span>
+                <span>ARMED</span>
+            </div>
+
             <div class="boot-status">DOOM PROTOCOL ACTIVATED</div>
             <div class="boot-substatus">Prepare for arrival</div>
         </div>
     </div>
 
+    <!-- =====================================================
+         BACKGROUND LAYERS
+    ===================================================== -->
+
     <div class="atmosphere"></div>
     <div class="emblem"></div>
     <div class="hud"></div>
+
+    <!-- =====================================================
+         CONTROLS
+    ===================================================== -->
 
     <div class="controls">
         <button class="ctrl-btn" id="muteBtn" title="Sound ON/OFF" aria-label="Toggle sound">🔇</button>
         <button class="ctrl-btn" id="fsBtn" title="Fullscreen" aria-label="Toggle fullscreen">⛶</button>
     </div>
 
+    <!-- =====================================================
+         LEFT PANEL
+    ===================================================== -->
+
     <aside class="side-panel left">
-        <div class="panel-header"><span>DOOM SYSTEM</span><span>● ONLINE</span></div>
-        <div class="metric"><div class="metric-top"><span>POWER CORE</span><span>98%</span></div><div class="metric-bar"><div class="metric-fill power"></div></div></div>
-        <div class="metric"><div class="metric-top"><span>ARMOR</span><span>94%</span></div><div class="metric-bar"><div class="metric-fill armor"></div></div></div>
-        <div class="metric"><div class="metric-top"><span>DEFENSE GRID</span><span>100%</span></div><div class="metric-bar"><div class="metric-fill defense"></div></div></div>
-        <div class="panel-footer"><strong>STATUS:</strong> OPERATIONAL<br><strong>SECTOR:</strong> LATVERIA-01<br><strong>PROTOCOL:</strong> DOOM</div>
+        <div class="panel-header">
+            <span>DOOM SYSTEM</span>
+            <span>● ONLINE</span>
+        </div>
+
+        <div class="metric">
+            <div class="metric-top">
+                <span>POWER CORE</span>
+                <span>98%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill power"></div>
+            </div>
+        </div>
+
+        <div class="metric">
+            <div class="metric-top">
+                <span>ARMOR</span>
+                <span>94%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill armor"></div>
+            </div>
+        </div>
+
+        <div class="metric">
+            <div class="metric-top">
+                <span>DEFENSE GRID</span>
+                <span>100%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill defense"></div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <strong>STATUS:</strong> OPERATIONAL<br>
+            <strong>SECTOR:</strong> LATVERIA-01<br>
+            <strong>PROTOCOL:</strong> DOOM
+        </div>
     </aside>
+
+    <!-- =====================================================
+         RIGHT PANEL
+    ===================================================== -->
 
     <aside class="side-panel right">
-        <div class="panel-header"><span>LATVERIA</span><span>SECURE</span></div>
-        <div class="metric"><div class="metric-top"><span>ENERGY</span><span>87%</span></div><div class="metric-bar"><div class="metric-fill energy"></div></div></div>
-        <div class="metric"><div class="metric-top"><span>NETWORK</span><span>100%</span></div><div class="metric-bar"><div class="metric-fill defense"></div></div></div>
-        <div class="metric"><div class="metric-top"><span>THREAT</span><span id="panelThreat">LOW</span></div><div class="metric-bar"><div class="metric-fill power" id="panelThreatBar"></div></div></div>
-        <div class="panel-footer"><strong>COMMAND:</strong> ACTIVE<br><strong>ACCESS:</strong> AUTHORIZED<br><strong>PROTOCOL:</strong> FINAL</div>
+        <div class="panel-header">
+            <span>LATVERIA</span>
+            <span>SECURE</span>
+        </div>
+
+        <div class="metric">
+            <div class="metric-top">
+                <span>ENERGY</span>
+                <span>87%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill energy"></div>
+            </div>
+        </div>
+
+        <div class="metric">
+            <div class="metric-top">
+                <span>NETWORK</span>
+                <span>100%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill defense"></div>
+            </div>
+        </div>
+
+        <div class="metric">
+            <div class="metric-top">
+                <span>THREAT</span>
+                <span id="panelThreat">LOW</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill power" id="panelThreatBar"></div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <strong>COMMAND:</strong> ACTIVE<br>
+            <strong>ACCESS:</strong> AUTHORIZED<br>
+            <strong>PROTOCOL:</strong> FINAL
+        </div>
     </aside>
 
+    <!-- =====================================================
+         THREAT LEVEL (desktop)
+    ===================================================== -->
+
     <div class="threat">
-        <div class="threat-header"><span>THREAT LEVEL</span><span class="threat-level" id="threatLevel">LOW</span></div>
-        <div class="threat-track"><div class="threat-fill" id="threatFill"></div></div>
+        <div class="threat-header">
+            <span>THREAT LEVEL</span>
+            <span class="threat-level" id="threatLevel">LOW</span>
+        </div>
+        <div class="threat-track">
+            <div class="threat-fill" id="threatFill"></div>
+        </div>
     </div>
 
+    <!-- Mobile threat -->
     <div class="mobile-threat">
-        <div class="threat-header"><span>THREAT</span><span class="threat-level" id="mobileThreatLevel">LOW</span></div>
-        <div class="threat-track"><div class="threat-fill" id="mobileThreatFill"></div></div>
+        <div class="threat-header">
+            <span>THREAT</span>
+            <span class="threat-level" id="mobileThreatLevel">LOW</span>
+        </div>
+        <div class="threat-track">
+            <div class="threat-fill" id="mobileThreatFill"></div>
+        </div>
     </div>
+
+    <!-- =====================================================
+         SYSTEM MESSAGE
+    ===================================================== -->
 
     <div class="system-message">
         <span class="message-text" id="systemMessage">LATVERIA NETWORK SECURED</span>
         <span class="cursor"></span>
     </div>
 
+    <!-- =====================================================
+         MAIN CONTENT
+    ===================================================== -->
+
     <main class="content">
         <div class="status">
             <span class="status-dot"></span>
             <span id="networkStatus">LATVERIA NETWORK ONLINE</span>
         </div>
+
         <div class="title">
             <span id="doomTitle">DOOM</span>
             <span id="titleRest"> IS COMING</span>
         </div>
+
         <div class="subtitle" id="dateSubtitle">December 18, 2026</div>
-        <div class="divider"><span></span><i></i><span></span></div>
+
+        <div class="divider">
+            <span></span>
+            <i></i>
+            <span></span>
+        </div>
+
         <div class="timer" aria-live="polite" aria-atomic="true">
-            <div class="time-box"><div class="number" id="days">00</div><div class="label">Days</div></div>
-            <div class="time-box"><div class="number" id="hours">00</div><div class="label">Hours</div></div>
-            <div class="time-box"><div class="number" id="minutes">00</div><div class="label">Minutes</div></div>
-            <div class="time-box"><div class="number" id="seconds">00</div><div class="label">Seconds</div></div>
+            <div class="time-box">
+                <div class="number" id="days">00</div>
+                <div class="label">Days</div>
+            </div>
+            <div class="time-box">
+                <div class="number" id="hours">00</div>
+                <div class="label">Hours</div>
+            </div>
+            <div class="time-box">
+                <div class="number" id="minutes">00</div>
+                <div class="label">Minutes</div>
+            </div>
+            <div class="time-box">
+                <div class="number" id="seconds">00</div>
+                <div class="label">Seconds</div>
+            </div>
         </div>
+
         <div class="system">
-            <strong>DOOM PROTOCOL</strong><span>•</span><span id="protocolStatus">APPROACHING</span>
+            <strong>DOOM PROTOCOL</strong>
+            <span>•</span>
+            <span id="protocolStatus">APPROACHING</span>
         </div>
-        <div class="arrival-message" id="arrivalMessage">DOOM HAS ARRIVED</div>
+
+        <div class="arrival-message" id="arrivalMessage">
+            DOOM HAS ARRIVED
+        </div>
     </main>
 
     <div class="scanlines"></div>
 
-    <script>
-        const DEFAULT_DATE = '2026-12-18T00:00:00';
-        const ONE_DAY = 24 * 60 * 60 * 1000;
-        const ONE_WEEK = 7 * ONE_DAY;
-        const ONE_MONTH = 30 * ONE_DAY;
-        const BOOT_DELAY = 4300;
-        const MSG_INTERVAL = 5000;
-        const TYPE_SPEED = 35;
+    <script src="script.js"></script>
 
-        const MSG_LOW = ['LATVERIA NETWORK SECURED', 'POWER CORE STABLE', 'DEFENSE GRID ONLINE', 'DOOM PROTOCOL ARMED'];
-        const MSG_ELEVATED = ['DOOM IS APPROACHING', 'AVENGERS THREAT DETECTED', 'ENERGY LEVELS RISING', 'PROTOCOL STATUS: ELEVATED'];
-        const MSG_HIGH = ['FINAL COUNTDOWN INITIATED', 'DOOM PROTOCOL CRITICAL PATH', 'ALL SYSTEMS AT COMBAT READY', 'LATVERIA DEFENSE MAXIMUM'];
-        const MSG_CRITICAL = ['IMMINENT ARRIVAL', 'CRITICAL PROTOCOL ACTIVE', 'DOOM IS NEAR', 'PREPARE FOR JUDGMENT'];
-
-        const $ = (id) => document.getElementById(id);
-        const els = {
-            bootScreen: $('bootScreen'), days: $('days'), hours: $('hours'), minutes: $('minutes'), seconds: $('seconds'),
-            doomTitle: $('doomTitle'), titleRest: $('titleRest'), protocolStatus: $('protocolStatus'), networkStatus: $('networkStatus'),
-            systemMessage: $('systemMessage'), threatLevel: $('threatLevel'), threatFill: $('threatFill'),
-            panelThreat: $('panelThreat'), panelThreatBar: $('panelThreatBar'),
-            mobileThreatLevel: $('mobileThreatLevel'), mobileThreatFill: $('mobileThreatFill'),
-            dateSubtitle: $('dateSubtitle'), muteBtn: $('muteBtn'), fsBtn: $('fsBtn')
-        };
-
-        function resolveTargetDate() {
-            const params = new URLSearchParams(window.location.search);
-            const dateParam = params.get('date');
-            if (dateParam) {
-                const parsed = new Date(dateParam);
-                if (!isNaN(parsed.getTime())) return parsed.getTime();
-            }
-            return new Date(DEFAULT_DATE).getTime();
-        }
-        const TARGET_DATE = resolveTargetDate();
-        (function() {
-            const d = new Date(TARGET_DATE);
-            els.dateSubtitle.textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        })();
-
-        let audioCtx = null;
-        let soundEnabled = false;
-
-        function getAudioCtx() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            return audioCtx;
-        }
-
-        function playBeep(freq = 440, duration = 0.05, type = 'square', gain = 0.04) {
-            if (!soundEnabled) return;
-            try {
-                const ctx = getAudioCtx();
-                if (ctx.state === 'suspended') ctx.resume();
-                const osc = ctx.createOscillator();
-                const g = ctx.createGain();
-                osc.type = type;
-                osc.frequency.value = freq;
-                g.gain.value = gain;
-                osc.connect(g);
-                g.connect(ctx.destination);
-                osc.start();
-                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-                osc.stop(ctx.currentTime + duration);
-            } catch (_) {}
-        }
-
-        function playBootSound() {
-            playBeep(220, 0.08, 'sawtooth', 0.03);
-            setTimeout(() => playBeep(330, 0.06, 'square', 0.025), 120);
-            setTimeout(() => playBeep(440, 0.1, 'square', 0.03), 250);
-        }
-
-        function playTick() {
-            playBeep(920, 0.035, 'square', 0.035);
-        }
-
-        let messageIndex = 0;
-        let currentPool = MSG_LOW;
-
-        function typeMessage(text) {
-            const el = els.systemMessage;
-            el.textContent = '';
-            let i = 0;
-            const interval = setInterval(() => {
-                el.textContent += text[i];
-                i += 1;
-                if (i >= text.length) clearInterval(interval);
-            }, TYPE_SPEED);
-        }
-
-        function rotateMessages() {
-            if (document.hidden) return;
-            typeMessage(currentPool[messageIndex % currentPool.length]);
-            messageIndex += 1;
-        }
-
-        function updateMessagePool(distance) {
-            if (distance <= ONE_DAY) currentPool = MSG_CRITICAL;
-            else if (distance <= ONE_WEEK) currentPool = MSG_HIGH;
-            else if (distance <= ONE_MONTH) currentPool = MSG_ELEVATED;
-            else currentPool = MSG_LOW;
-        }
-
-        const prevValues = { days: null, hours: null, minutes: null, seconds: null };
-
-        function animateNumber(el, key, newVal) {
-            const str = String(newVal).padStart(2, '0');
-            if (prevValues[key] !== null && prevValues[key] !== str) {
-                el.classList.add('tick');
-                setTimeout(() => { el.textContent = str; el.classList.remove('tick'); }, 90);
-            } else {
-                el.textContent = str;
-            }
-            prevValues[key] = str;
-        }
-
-        function setArrivedState() {
-            document.body.classList.add('arrived');
-            document.body.classList.remove('critical', 'threat-elevated', 'threat-high', 'threat-critical');
-            animateNumber(els.days, 'days', 0);
-            animateNumber(els.hours, 'hours', 0);
-            animateNumber(els.minutes, 'minutes', 0);
-            animateNumber(els.seconds, 'seconds', 0);
-            els.doomTitle.textContent = 'DOOM';
-            els.titleRest.textContent = ' HAS ARRIVED';
-            els.protocolStatus.textContent = 'COMPLETE';
-            els.networkStatus.textContent = 'LATVERIA PROTOCOL COMPLETE';
-        }
-
-        function updateCountdown() {
-            const distance = TARGET_DATE - Date.now();
-            if (distance <= 0) { setArrivedState(); return; }
-            const days = Math.floor(distance / ONE_DAY);
-            const hours = Math.floor((distance % ONE_DAY) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            animateNumber(els.days, 'days', days);
-            animateNumber(els.hours, 'hours', hours);
-            animateNumber(els.minutes, 'minutes', minutes);
-            animateNumber(els.seconds, 'seconds', seconds);
-            if (prevValues.seconds !== null && prevValues.seconds !== String(seconds).padStart(2, '0')) playTick();
-            if (distance <= ONE_DAY) {
-                document.body.classList.add('critical');
-                els.protocolStatus.textContent = 'CRITICAL';
-            } else {
-                document.body.classList.remove('critical');
-                els.protocolStatus.textContent = 'APPROACHING';
-            }
-            updateMessagePool(distance);
-        }
-
-        function getThreatState(distance) {
-            if (distance <= ONE_DAY) return { level: 'CRITICAL', value: 100, cls: 'threat-critical' };
-            if (distance <= ONE_WEEK) return { level: 'HIGH', value: 75, cls: 'threat-high' };
-            if (distance <= ONE_MONTH) return { level: 'ELEVATED', value: 50, cls: 'threat-elevated' };
-            return { level: 'LOW', value: 20, cls: '' };
-        }
-
-        function updateThreat() {
-            const distance = TARGET_DATE - Date.now();
-            const { level, value, cls } = getThreatState(distance);
-            document.body.classList.remove('threat-elevated', 'threat-high', 'threat-critical');
-            if (cls) document.body.classList.add(cls);
-            els.threatLevel.textContent = level;
-            els.threatFill.style.width = value + '%';
-            els.panelThreat.textContent = level;
-            els.panelThreatBar.style.width = value + '%';
-            els.mobileThreatLevel.textContent = level;
-            els.mobileThreatFill.style.width = value + '%';
-        }
-
-        function updateUI() {
-            updateCountdown();
-            updateThreat();
-        }
-
-        function initControls() {
-            els.muteBtn.addEventListener('click', async () => {
-                soundEnabled = !soundEnabled;
-                els.muteBtn.classList.toggle('active', soundEnabled);
-                els.muteBtn.textContent = soundEnabled ? '🔊' : '🔇';
-                if (soundEnabled) {
-                    try {
-                        const ctx = getAudioCtx();
-                        if (ctx.state === 'suspended') await ctx.resume();
-                    } catch (_) {}
-                    playBeep(520, 0.08, 'square', 0.05);
-                    playBeep(780, 0.06, 'square', 0.04);
-                }
-            });
-
-            els.fsBtn.addEventListener('click', async () => {
-                try {
-                    if (!document.fullscreenElement) {
-                        await document.documentElement.requestFullscreen();
-                        els.fsBtn.classList.add('active');
-                    } else {
-                        await document.exitFullscreen();
-                        els.fsBtn.classList.remove('active');
-                    }
-                } catch (err) {
-                    console.warn('Fullscreen not available:', err);
-                }
-            });
-
-            document.addEventListener('fullscreenchange', () => {
-                els.fsBtn.classList.toggle('active', !!document.fullscreenElement);
-            });
-        }
-
-        function init() {
-            initControls();
-            rotateMessages();
-            setInterval(rotateMessages, MSG_INTERVAL);
-            updateUI();
-            setInterval(updateUI, 1000);
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    els.bootScreen.classList.add('hidden');
-                    if (soundEnabled) playBootSound();
-                }, BOOT_DELAY);
-            });
-        }
-
-        init();
-    </script>
 </body>
 </html>
