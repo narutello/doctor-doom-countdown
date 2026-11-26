@@ -77,7 +77,6 @@ function resolveTargetDate() {
     const dateParam = params.get('date');
 
     if (dateParam) {
-        // Accept ISO or simple date strings
         const parsed = new Date(dateParam);
         if (!isNaN(parsed.getTime())) {
             return parsed.getTime();
@@ -95,7 +94,7 @@ const TARGET_DATE = resolveTargetDate();
 })();
 
 /* =====================================================
-   SOUND (Web Audio – simple beeps)
+   SOUND (Web Audio – cinematic beeps)
 ===================================================== */
 
 let audioCtx = null;
@@ -127,14 +126,17 @@ function playBeep(freq = 440, duration = 0.05, type = 'square', gain = 0.04) {
     } catch (_) {}
 }
 
-function playBootSound() {
-    playBeep(220, 0.08, 'sawtooth', 0.03);
-    setTimeout(() => playBeep(330, 0.06, 'square', 0.025), 120);
-    setTimeout(() => playBeep(440, 0.1, 'square', 0.03), 250);
+// Clearer power-on sequence when enabling audio
+function playPowerOn() {
+    playBeep(180, 0.12, 'sawtooth', 0.04);
+    setTimeout(() => playBeep(320, 0.09, 'square', 0.035), 100);
+    setTimeout(() => playBeep(520, 0.12, 'square', 0.04), 220);
+    setTimeout(() => playBeep(780, 0.08, 'triangle', 0.03), 360);
 }
 
+// Subtle tick every second (only when audio is on)
 function playTick() {
-    playBeep(920, 0.035, 'square', 0.035);
+    playBeep(880, 0.03, 'square', 0.028);
 }
 
 /* =====================================================
@@ -293,33 +295,53 @@ function updateUI() {
 }
 
 /* =====================================================
-   CONTROLS
+   CONTROLS + ICON TOGGLE
 ===================================================== */
 
+function updateMuteIcon(enabled) {
+    const mutedIcon = els.muteBtn.querySelector('.icon-muted');
+    const soundIcon = els.muteBtn.querySelector('.icon-sound');
+    if (mutedIcon && soundIcon) {
+        mutedIcon.style.display = enabled ? 'none' : 'block';
+        soundIcon.style.display = enabled ? 'block' : 'none';
+    }
+    els.muteBtn.classList.toggle('active', enabled);
+    els.muteBtn.title = enabled ? 'Audio Systems Online' : 'Audio Systems Offline';
+}
+
+function updateFsIcon(isFullscreen) {
+    const expandIcon = els.fsBtn.querySelector('.icon-expand');
+    const compressIcon = els.fsBtn.querySelector('.icon-compress');
+    if (expandIcon && compressIcon) {
+        expandIcon.style.display = isFullscreen ? 'none' : 'block';
+        compressIcon.style.display = isFullscreen ? 'block' : 'none';
+    }
+    els.fsBtn.classList.toggle('active', isFullscreen);
+    els.fsBtn.title = isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Protocol';
+}
+
 function initControls() {
+    // Audio toggle
     els.muteBtn.addEventListener('click', async () => {
         soundEnabled = !soundEnabled;
-        els.muteBtn.classList.toggle('active', soundEnabled);
-        els.muteBtn.textContent = soundEnabled ? '🔊' : '🔇';
+        updateMuteIcon(soundEnabled);
 
         if (soundEnabled) {
             try {
                 const ctx = getAudioCtx();
                 if (ctx.state === 'suspended') await ctx.resume();
             } catch (_) {}
-            playBeep(520, 0.08, 'square', 0.05);
-            playBeep(780, 0.06, 'square', 0.04);
+            playPowerOn(); // clear feedback that audio is now active
         }
     });
 
+    // Fullscreen toggle
     els.fsBtn.addEventListener('click', async () => {
         try {
             if (!document.fullscreenElement) {
                 await document.documentElement.requestFullscreen();
-                els.fsBtn.classList.add('active');
             } else {
                 await document.exitFullscreen();
-                els.fsBtn.classList.remove('active');
             }
         } catch (err) {
             console.warn('Fullscreen not available:', err);
@@ -327,8 +349,12 @@ function initControls() {
     });
 
     document.addEventListener('fullscreenchange', () => {
-        els.fsBtn.classList.toggle('active', !!document.fullscreenElement);
+        updateFsIcon(!!document.fullscreenElement);
     });
+
+    // Initial state
+    updateMuteIcon(false);
+    updateFsIcon(false);
 }
 
 /* =====================================================
@@ -355,8 +381,6 @@ function init() {
 function startBoot() {
     setTimeout(() => {
         els.bootScreen.classList.add('hidden');
-        // Sound only plays if user already enabled it (rare on first load)
-        if (soundEnabled) playBootSound();
     }, BOOT_DELAY);
 }
 
