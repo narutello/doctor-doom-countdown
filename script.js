@@ -2,7 +2,7 @@
    CONFIG
 ===================================================== */
 
-const DEFAULT_DATE = '2026-12-18T00:00:00';
+const DEFAULT_DATE = '2026-12-18T00:00:00Z'; // UTC for consistency
 const ONE_DAY      = 24 * 60 * 60 * 1000;
 const ONE_WEEK     = 7 * ONE_DAY;
 const ONE_MONTH    = 30 * ONE_DAY;
@@ -64,7 +64,8 @@ const els = {
     mobileThreatFill:  $('mobileThreatFill'),
     dateSubtitle:      $('dateSubtitle'),
     muteBtn:           $('muteBtn'),
-    fsBtn:             $('fsBtn')
+    fsBtn:             $('fsBtn'),
+    arrivalMessage:    $('arrivalMessage')
 };
 
 /* =====================================================
@@ -76,6 +77,7 @@ function resolveTargetDate() {
     const dateParam = params.get('date');
 
     if (dateParam) {
+        // Accept ISO or simple date strings
         const parsed = new Date(dateParam);
         if (!isNaN(parsed.getTime())) {
             return parsed.getTime();
@@ -88,7 +90,7 @@ const TARGET_DATE = resolveTargetDate();
 
 (function updateSubtitle() {
     const d = new Date(TARGET_DATE);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
     els.dateSubtitle.textContent = d.toLocaleDateString('en-US', options);
 })();
 
@@ -141,16 +143,21 @@ function playTick() {
 
 let messageIndex = 0;
 let currentPool = MSG_LOW;
+let typeInterval = null;
 
 function typeMessage(text) {
     const el = els.systemMessage;
+    if (typeInterval) clearInterval(typeInterval);
     el.textContent = '';
     let i = 0;
 
-    const interval = setInterval(() => {
+    typeInterval = setInterval(() => {
         el.textContent += text[i];
         i += 1;
-        if (i >= text.length) clearInterval(interval);
+        if (i >= text.length) {
+            clearInterval(typeInterval);
+            typeInterval = null;
+        }
     }, TYPE_SPEED);
 }
 
@@ -337,12 +344,20 @@ function init() {
     updateUI();
     setInterval(updateUI, 1000);
 
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            els.bootScreen.classList.add('hidden');
-            if (soundEnabled) playBootSound();
-        }, BOOT_DELAY);
-    });
+    // Boot sequence
+    if (document.readyState === 'complete') {
+        startBoot();
+    } else {
+        window.addEventListener('load', startBoot);
+    }
+}
+
+function startBoot() {
+    setTimeout(() => {
+        els.bootScreen.classList.add('hidden');
+        // Sound only plays if user already enabled it (rare on first load)
+        if (soundEnabled) playBootSound();
+    }, BOOT_DELAY);
 }
 
 init();
