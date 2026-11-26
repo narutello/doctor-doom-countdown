@@ -139,9 +139,12 @@ body.arrived .divider,
 body.arrived .subtitle,
 body.arrived .status,
 body.arrived .mobile-threat,
-body.arrived .controls {
+body.arrived .controls,
+body.arrived .threat,
+body.arrived .system-message {
     opacity: 0;
     pointer-events: none;
+    transition: opacity 0.6s ease;
 }
 body.arrived .title {
     font-size: clamp(42px, 8vw, 100px);
