@@ -731,8 +731,18 @@ body.threat-critical .emblem {
     color: var(--green);
     border-color: var(--green);
     background: rgba(60, 255, 114, 0.12);
-    text-shadow: 0 0 10px var(--green);
     box-shadow: 0 0 16px rgba(60, 255, 114, 0.4);
+}
+
+/* SVG Icons inside buttons */
+.ctrl-btn .icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+    pointer-events: none;
+}
+.ctrl-btn.active .icon {
+    filter: drop-shadow(0 0 4px var(--green));
 }
 
 /* SCANLINES */
@@ -790,7 +800,8 @@ body.threat-critical .emblem {
     .label { font-size: 7px; letter-spacing: 2px; }
     .arrival-message { font-size: 8px; letter-spacing: 3px; }
     .controls { top: 14px; right: 14px; }
-    .ctrl-btn { width: 36px; height: 36px; font-size: 14px; }
+    .ctrl-btn { width: 36px; height: 36px; }
+    .ctrl-btn .icon { width: 16px; height: 16px; }
 }
 @media (max-width: 400px) {
     .title { font-size: 36px; }
